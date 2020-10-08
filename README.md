@@ -7,7 +7,8 @@ Framework independant: works on Xamarin Forms, Xamarin native, Mvvmcross, ...
 All features are async and uses Xamarin.Essentials to get the display context.
 Uses C# Nullables.
 
-[![NuGet](https://img.shields.io/nuget/v/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)
+[![NuGet](https://img.shields.io/nuget/v/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)  
+![Nuget](https://img.shields.io/nuget/dt/Vapolia.UserInteraction)
 
 ### Features
 
