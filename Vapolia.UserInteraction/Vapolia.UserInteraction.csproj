@@ -1,0 +1,67 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.1.2">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;Xamarin.iOS10;MonoAndroid10.0</TargetFrameworks>
+    <AssemblyName>Vapolia.UserInteraction</AssemblyName>
+    <RootNamespace>Vapolia.UserInteraction</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DebugType>portable</DebugType>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Shared\**\*.cs" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <Compile Include="Android\**\*.cs" />
+    <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.4" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+    <Compile Include="Ios\**\*.cs" />
+    <PackageReference Include="Cirrious.FluentLayout" Version="2.9.0" />
+  </ItemGroup>
+
+
+  <!--  nuget configurable properties -->
+  <PropertyGroup>
+    <Version>0.0.0-pre1</Version>
+    <VersionSuffix></VersionSuffix>
+    <DefineConstants>$(DefineConstants);</DefineConstants>
+  </PropertyGroup>
+
+  <!--  nuget properties -->
+  <PropertyGroup>
+    <PackageId>Vapolia.UserInteraction</PackageId>
+    <!--    <PackageIconUrl>https://github.com/softlion/XamarinFormsGesture/favicon.ico</PackageIconUrl>-->
+    <Summary>Confirm, Alert, Menu, Toast, ... for xamarin (native, forms, with any mvvm framework)</Summary>
+    <PackageTags>user interaction picker xamarin ios android forms</PackageTags>
+    <Title>A 'UserInteraction' plugin for xamarin with Confirm, Alert, Menu, Toast, ActivityIndicator, ...</Title>
+    <Description>
+      Content: Confirm, Alert, Menu, Toast, ActivityIndicator, ...
+
+      Work out of the box on xamarin native, xamarin forms, and with any mvvm framework.
+    </Description>
+    <PackageLicenseUrl>https://vapolia.eu</PackageLicenseUrl>
+    <PackageVersion>$(Version)$(VersionSuffix)</PackageVersion>
+    <Product>UserInteraction</Product>
+    <Company>Vapolia</Company>
+    <Authors>Benjamin Mayrargue</Authors>
+    <Owners>https://vapolia.eu</Owners>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Copyright>© 2016-2020 Vapolia</Copyright>
+    <RepositoryUrl>https://github.com/softlion/UserInteraction</RepositoryUrl>
+    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+    <!--    <PackageLicenseFile>LICENSE</PackageLicenseFile>-->
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/softlion/UserInteraction</PackageProjectUrl>
+    <PackageReleaseNotes>
+      2.0.0: now framework independant!
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>
