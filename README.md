@@ -7,11 +7,12 @@ Framework independant: works on Xamarin Forms, Xamarin native, Mvvmcross, ...
 All features are async and uses Xamarin.Essentials to get the display context.
 Uses C# Nullables.
 
-[![NuGet](https://img.shields.io/nuget/v/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)
+[![NuGet](https://img.shields.io/nuget/v/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)  
+![Nuget](https://img.shields.io/nuget/dt/Vapolia.UserInteraction)
 
-###Features
+### Features
 
-####Single choice menu
+#### Single choice menu
 Menu: standard action sheet with single item choice  
 UIAlertController on iOS. AlertDialog on android.
 
@@ -25,7 +26,7 @@ destroy is in red, cancel is separated from the other buttons.
 This is the best UI practice, don't try to change it. 
 
 
-####Wait indicators with or without progress
+#### Wait indicators with or without progress
 ```csharp
 //Displays a wait indicator (title + body + indeterminate progress bar)
 //Returns a controller for the wait indicator
@@ -35,7 +36,7 @@ IWaitIndicator WaitIndicator(CancellationToken dismiss, string message = null, s
 Task ActivityIndicator(CancellationToken dismiss, double? apparitionDelay = null, uint? argbColor = null);
 ```
 
-####Confirmation prompts and alerts
+#### Confirmation prompts and alerts
 
 A `Toast` is an unobtrusive temporary tooltip-like text used to confirm that an action was done succesfully or failed.
 An `Input` is an alert popup with one text field. You can choose the keyboard type to limit to numbers for example.  
@@ -55,7 +56,7 @@ Task Toast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration dura
 Task<string?> Input(string message, string defaultValue = null, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", FieldType fieldType = FieldType.Default, int maxLength = 0);
 ```
 
-####Examples
+#### Examples
 ```csharp
 //confirm
 	var ui = new UserInteraction>();
