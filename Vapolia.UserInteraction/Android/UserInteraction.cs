@@ -12,6 +12,8 @@ using Android.Widget;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Runtime;
+using Android.Text.Method;
+using Google.Android.Material.Dialog;
 using Microsoft.Extensions.Logging;
 using KeyboardType = Android.Content.Res.KeyboardType;
 
@@ -232,7 +234,7 @@ namespace Vapolia.UserInteraction.Droid
 		    return tcs.Task;
 		}
 
-	    public Task<string?> Input(string message, string? defaultValue = null, string? placeholder = null, string? title = null, string okButton = "OK", string cancelButton = "Cancel", FieldType fieldType = FieldType.Default, int maxLength=0)
+	    public Task<string?> Input(string message, string? defaultValue = null, string? placeholder = null, string? title = null, string okButton = "OK", string cancelButton = "Cancel", FieldType fieldType = FieldType.Default, int maxLength=0, bool selectContent = true)
 	    {
 	        var tcs = new TaskCompletionSource<string?>();
 
@@ -246,7 +248,12 @@ namespace Vapolia.UserInteraction.Droid
 	                if (fieldType == FieldType.Email)
 	                    input.InputType = InputTypes.ClassText | InputTypes.TextVariationEmailAddress;
 			        else if (fieldType == FieldType.Integer)
-                        input.InputType = InputTypes.ClassNumber; // | InputTypes.NumberFlagDecimal;
+                        input.InputType = InputTypes.ClassNumber;
+                    else if (fieldType == FieldType.Decimal)
+                    {
+                        input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned | InputTypes.NumberFlagDecimal;
+                        input.KeyListener = DigitsKeyListener.GetInstance(null, true, true);
+                    }
 
 	                if (maxLength > 0)
 	                {
@@ -281,6 +288,11 @@ namespace Vapolia.UserInteraction.Droid
 	                            dialog.Window.SetSoftInputMode(SoftInput.StateVisible);
 	                    };
 	                }
+
+                    if (selectContent && !String.IsNullOrWhiteSpace(defaultValue))
+                    {
+                        input.RequestFocus();
+                    }
 
 	                dialog.Show();
 
@@ -377,6 +389,17 @@ namespace Vapolia.UserInteraction.Droid
 	        return wi;
         }
 
+        class DialogDismissListener : Java.Lang.Object, IDialogInterfaceOnDismissListener
+        {
+            private readonly Func<bool> onDismiss;
+
+            public DialogDismissListener(Func<bool> onDismiss)
+                => this.onDismiss = onDismiss;
+
+            public void OnDismiss(IDialogInterface? dialog)
+                => onDismiss();
+        }
+
         public Task ActivityIndicator(CancellationToken dismiss, double? apparitionDelay = null, uint? argbColor = null)
         {
             var tcs = new TaskCompletionSource<int>();
@@ -397,15 +420,15 @@ namespace Vapolia.UserInteraction.Droid
                             .SetCancelable(false)
                             .Create();*/
 
-                        var dialog = new AndroidX.AppCompat.App.AppCompatDialog(activity, Android.Resource.Style.ThemeNoTitleBar); //Theme_Translucent //ThemeNoTitleBarFullScreen
-                        dialog.SetContentView(layout);
-                        dialog.SetCancelable(false);
+                        var builder = new MaterialAlertDialogBuilder(activity); //Android.Resource.Style.ThemeNoTitleBar);
+                        builder.SetView(layout);
+                        builder.SetCancelable(false);
                         //dialog.CancelEvent += (sender, args) => tcs.TrySetResult(0);
-                        dialog.DismissEvent += (sender, args) => tcs.TrySetResult(0);
+                        builder.SetOnDismissListener(new DialogDismissListener(() => tcs.TrySetResult(0)));
 
                         //Make translucent. ThemeTranslucentNoTitleBarFullScreen does not work on wiko.
-                        dialog.Window.SetBackgroundDrawable(new ColorDrawable(Color.Argb(175,255,255,255))); 
-                        dialog.Show();
+                        builder.SetBackground(new ColorDrawable(Color.Argb(175,255,255,255))); 
+                        var dialog = builder.Show();
 
                         dismiss.Register(() =>
                         {

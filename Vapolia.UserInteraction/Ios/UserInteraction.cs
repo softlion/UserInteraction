@@ -91,7 +91,7 @@ namespace Vapolia.UserInteraction.Touch
 		    return tcs.Task;
 		}
 
-	    public Task<string?> Input(string message, string? defaultValue = null, string? placeholder = null, string? title = null, string okButton = "OK", string cancelButton = "Cancel", FieldType fieldType = FieldType.Default, int maxLength = 0)
+	    public Task<string?> Input(string message, string? defaultValue = null, string? placeholder = null, string? title = null, string okButton = "OK", string cancelButton = "Cancel", FieldType fieldType = FieldType.Default, int maxLength = 0, bool selectContent = true)
 	    {
 	        var tcs = new TaskCompletionSource<string?>();
 
@@ -101,6 +101,15 @@ namespace Vapolia.UserInteraction.Touch
 	                textField.Placeholder = placeholder;
 	            if (defaultValue != null)
 	                textField.Text = defaultValue;
+
+                if(selectContent && !String.IsNullOrWhiteSpace(defaultValue))
+                {
+                    textField.EditingDidBegin += (sender, args) =>
+                    {
+                        textField.SelectedTextRange = textField.GetTextRange(textField.BeginningOfDocument, textField.EndOfDocument);
+                        textField.BecomeFirstResponder();
+                    };
+                }
 
 	            if (fieldType != FieldType.Default)
 	            {
@@ -117,6 +126,17 @@ namespace Vapolia.UserInteraction.Touch
 	                            textField.Text = newText;
 	                    };
 	                }
+                    else if (fieldType == FieldType.Decimal)
+                    {
+                        textField.KeyboardType = UIKeyboardType.DecimalPad;
+                        textField.ValueChanged += (sender, args) =>
+                        {
+                            var text = textField.Text ?? "";
+                            var newText = Regex.Replace(text, "[^0-9.,\\s]", "");
+                            if (text != newText)
+                                textField.Text = newText;
+                        };
+                    }
 	            }
 
 	            if (maxLength > 0)

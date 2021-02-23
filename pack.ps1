@@ -8,8 +8,8 @@ if ($IsMacOS) {
 
 #####################
 #Build release config
-$version="2.0.0"
-$versionSuffix="-pre2"
+$version="2.0.2"
+$versionSuffix="-pre1"
 
 del *.nupkg
 & $msbuild "Vapolia.UserInteraction.sln" /restore /p:Configuration=Release /p:Platform="Any CPU" /p:Version="$version" /p:VersionSuffix="$versionSuffix" /p:Deterministic=false /p:PackageOutputPath="$PSScriptRoot" --% /t:Clean;Build;Pack
@@ -17,4 +17,4 @@ if ($lastexitcode -ne 0) { exit $lastexitcode; }
 
 ####################
 # PUSH
-dotnet nuget push "Vapolia.UserInteraction*.nupkg"
+dotnet nuget push "Vapolia.UserInteraction*.nupkg" --interactive
