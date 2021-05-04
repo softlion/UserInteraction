@@ -60,8 +60,11 @@ If `selectContent` is `true` (default), the text is automatically selected, so w
 
 #### Examples
 ```csharp
+//register IUserInteraction in your ioc container (dryioc, shiny, ...)
+services.AddSingleton<IUserInteraction,UserInteraction>();
+
 //confirm
-	var ui = new UserInteraction();
+	var ui = services.Resolve<IUserInteraction>();
 	var ok = await ui.Confirm("Are you sure?");
 
 //wait for an operation to complete
