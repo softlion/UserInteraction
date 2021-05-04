@@ -61,7 +61,7 @@ If `selectContent` is `true` (default), the text is automatically selected, so w
 #### Examples
 ```csharp
 //confirm
-	var ui = new UserInteraction>();
+	var ui = new UserInteraction();
 	var ok = await ui.Confirm("Are you sure?");
 
 //wait for an operation to complete
@@ -78,7 +78,6 @@ If `selectContent` is `true` (default), the text is automatically selected, so w
 
 
 //Single choice menu with optional cancel and destroy items
-	var ui = Mvx.IoCProvider.Resolve<IUserInteraction>();
     var cancel = default(CancellationToken); //you can cancel the dialog programatically. Menu will return 0.
     var menu = await ui.Menu(cancel, true, "Choose something", "Cancel", null, "item1", "item2"); //You can add as many items as your want
     //returns:
