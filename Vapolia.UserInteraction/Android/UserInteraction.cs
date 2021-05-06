@@ -11,11 +11,15 @@ using Android.Views;
 using Android.Widget;
 using System.Threading.Tasks;
 using Android.App;
+using Android.OS;
 using Android.Runtime;
 using Android.Text.Method;
 using Google.Android.Material.Dialog;
+using Java.Lang;
 using Microsoft.Extensions.Logging;
+using Exception = System.Exception;
 using KeyboardType = Android.Content.Res.KeyboardType;
+using String = System.String;
 
 namespace Vapolia.UserInteraction.Droid
 {
@@ -252,7 +256,15 @@ namespace Vapolia.UserInteraction.Droid
                     else if (fieldType == FieldType.Decimal)
                     {
                         input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned | InputTypes.NumberFlagDecimal;
-                        input.KeyListener = DigitsKeyListener.GetInstance(null, true, true);
+                        try
+                        {
+                            input.KeyListener = DigitsKeyListener.GetInstance(null, true, true);
+                        }
+                        catch (NoSuchMethodError)
+                        {
+                            if(Build.VERSION.SdkInt >= BuildVersionCodes.O)
+                                input.KeyListener = new DigitsKeyListener(null, true, true);
+                        }
                     }
 
 	                if (maxLength > 0)
