@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using Exception = System.Exception;
 using KeyboardType = Android.Content.Res.KeyboardType;
 using String = System.String;
+using AndroidX.Core.OS;
 
 namespace Vapolia.UserInteraction.Droid
 {
@@ -252,18 +253,19 @@ namespace Vapolia.UserInteraction.Droid
 	                if (fieldType == FieldType.Email)
 	                    input.InputType = InputTypes.ClassText | InputTypes.TextVariationEmailAddress;
 			        else if (fieldType == FieldType.Integer)
-                        input.InputType = InputTypes.ClassNumber;
+                        input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned;
                     else if (fieldType == FieldType.Decimal)
                     {
                         input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned | InputTypes.NumberFlagDecimal;
+                        var locale = LocaleListCompat.Default.Get(0);
                         try
                         {
-                            input.KeyListener = DigitsKeyListener.GetInstance(null, true, true);
+                            input.KeyListener = DigitsKeyListener.GetInstance(locale, true, true);
                         }
                         catch (NoSuchMethodError)
                         {
                             if(Build.VERSION.SdkInt >= BuildVersionCodes.O)
-                                input.KeyListener = new DigitsKeyListener(null, true, true);
+                                input.KeyListener = new DigitsKeyListener(locale, true, true);
                         }
                     }
 

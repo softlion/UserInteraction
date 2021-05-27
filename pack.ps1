@@ -8,7 +8,7 @@ if ($IsMacOS) {
 
 #####################
 #Build release config
-$version="2.0.3"
+$version="2.0.4"
 $versionSuffix=""
 
 del *.nupkg
@@ -18,3 +18,4 @@ if ($lastexitcode -ne 0) { exit $lastexitcode; }
 ####################
 # PUSH
 dotnet nuget push "Vapolia.UserInteraction*.nupkg" --interactive
+#copy "Vapolia.UserInteraction*.nupkg" ../../localnugets
