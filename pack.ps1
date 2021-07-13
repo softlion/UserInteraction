@@ -8,7 +8,7 @@ if ($IsMacOS) {
 
 #####################
 #Build release config
-$version="2.0.4"
+$version="2.0.5"
 $versionSuffix=""
 
 del *.nupkg
