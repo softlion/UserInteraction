@@ -17,5 +17,5 @@ if ($lastexitcode -ne 0) { exit $lastexitcode; }
 
 ####################
 # PUSH
-#dotnet nuget push "Vapolia.UserInteraction*.nupkg" --interactive
-copy "Vapolia.UserInteraction*.nupkg" ../../localnugets
+dotnet nuget push "Vapolia.UserInteraction*.nupkg" --interactive
+#copy "Vapolia.UserInteraction*.nupkg" ../../localnugets
