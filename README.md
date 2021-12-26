@@ -11,44 +11,50 @@ All features are static async and uses Xamarin.Essentials to get the display con
 ## Examples
 ```csharp
 //confirm
-	var ok = await Vapolia.UserInteraction.Confirm("Are you sure?");
+var ok = await Vapolia.UserInteraction.Confirm("Are you sure?");
 
 //display a wait indicator while waiting for a long mandatory operation to complete
-    var dismiss = new CancellationTokenSource();
-    try {
-        var userCancelled = Vapolia.UserInteraction.WaitIndicator(dismiss.Token, "Please wait", "Loggin in");
-        await Task.Delay(3000, userCancelled); //simulate a long operation
-    } finally {
-        dismiss.Cancel();
-    }
+var dismiss = new CancellationTokenSource();
+try 
+{
+  var userCancelled = Vapolia.UserInteraction.WaitIndicator(dismiss.Token, "Please wait", "Loggin in");
+  await Task.Delay(3000, userCancelled); //simulate a long operation
+} 
+finally 
+{
+  dismiss.Cancel();
+}
 
 //display an obtrusive loading indicator
-    var dismiss = new CancellationTokenSource();
-    try {
-	    await Vapolia.UserInteraction.ActivityIndicator(dismiss.Token, apparitionDelay: 0.5, argbColor: (uint)0xFFFFFF);
-        await Task.Delay(3000); //simulate a long operation
-    } finally {
-        dismiss.Cancel();
-    }
+var dismiss = new CancellationTokenSource();
+try 
+{
+  await Vapolia.UserInteraction.ActivityIndicator(dismiss.Token, apparitionDelay: 0.5, argbColor: (uint)0xFFFFFF);
+  await Task.Delay(3000); //simulate a long operation
+} 
+finally 
+{
+  dismiss.Cancel();
+}
 
 
 //Single choice menu with optional cancel and destroy items
-    var cancel = default(CancellationToken); //you can cancel the dialog programatically.
-    var menu = await ui.Menu(cancel, true, "Choose something", "Cancel", null, "item1", "item2", ...); //You can add as many items as your want
-    //returns:
-    //0 => always cancel action (even if not displayed, ie the cancel text is null)
-    //1 => always destroy action (even if not displayed, ie the destroy text is null)
-    //2+ => item1, item2, ...
-    if (menu >= 2)
-	{
-	}
+var cancel = default(CancellationToken); //you can cancel the dialog programatically.
+var menu = await ui.Menu(cancel, true, "Choose something", "Cancel", null, "item1", "item2", ...); //You can add as many items as your want
+//returns:
+//0 => always cancel action (even if not displayed, ie the cancel text is null)
+//1 => always destroy action (even if not displayed, ie the destroy text is null)
+//2+ => item1, item2, ...
+if (menu >= 2)
+{
+}
 ```
 
 ## Documentation
 
 ### Single choice menu
 Menu: standard action sheet with single item choice  
-UIAlertController on iOS. AlertDialog on android.
+UIAlertController on iOS. MaterialAlertDialog on android.
 
 
 ```csharp
@@ -57,8 +63,7 @@ Task<int> Menu(CancellationToken dismiss, bool userCanDismiss, string? title, st
 ```
 cancel and destroy buttons are optional, and are displayed differently on iOS.  
 destroy is in red, cancel is separated from the other buttons.  
-This is the best UI practice, don't try to change it. 
-
+This is the best UI practice, don't try to change it.
 
 ### Wait indicators with or without progress
 ```csharp
@@ -92,19 +97,18 @@ Task<string?> Input(string message, string defaultValue = null, string placehold
 
 If `selectContent` is `true` (default), the text is automatically selected, so when the user starts typing it is replaced.
 
-
 ### Theme
 
-iOS only: set default color for all activity indicators:
+iOS only: set a default color for all activity indicators:
 
 ```csharp
 Vapolia.UserInteraction.DefaultColor = 0xAARRGGBB;
 ```
 
-Android only: this lib uses a standard Android.Material.Dialog that is themed by the material theme as described in the (Google documentation)[https://material.io/components/dialogs/android#theming-dialogs]
+Android only: this lib uses a standard Android.Material.Dialog that is themed by the material theme as described in the [Google documentation](https://material.io/components/dialogs/android#theming-dialogs)
 
 ## About
 
 License: MIT
 
-Enterprise support available, contact (Vapolia)[https://vapolia.eu]
+Enterprise support available, contact [Vapolia](https://vapolia.eu)
