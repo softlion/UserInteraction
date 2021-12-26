@@ -1,18 +1,52 @@
-UserInteraction Plugin for Xamarin
-==================================
+# User Interaction for Xamarin (Xamarin.Essentials syle)
 
-For: Android, iOS.
-Framework independant: works on Xamarin Forms, Xamarin native, Mvvmcross, ...
+Compatibility: Android, iOS
 
-All features are async and uses Xamarin.Essentials to get the display context.
-Uses C# Nullables.
+All features are static async and uses Xamarin.Essentials to get the display context.
 
 [![NuGet](https://img.shields.io/nuget/v/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)  
 ![Nuget](https://img.shields.io/nuget/dt/Vapolia.UserInteraction)
 
-### Features
 
-#### Single choice menu
+## Examples
+```csharp
+//confirm
+	var ok = await Vapolia.UserInteraction.Confirm("Are you sure?");
+
+//display a wait indicator while waiting for a long mandatory operation to complete
+    var dismiss = new CancellationTokenSource();
+    try {
+        var userCancelled = Vapolia.UserInteraction.WaitIndicator(dismiss.Token, "Please wait", "Loggin in");
+        await Task.Delay(3000, userCancelled); //simulate a long operation
+    } finally {
+        dismiss.Cancel();
+    }
+
+//display an obtrusive loading indicator
+    var dismiss = new CancellationTokenSource();
+    try {
+	    await Vapolia.UserInteraction.ActivityIndicator(dismiss.Token, apparitionDelay: 0.5, argbColor: (uint)0xFFFFFF);
+        await Task.Delay(3000); //simulate a long operation
+    } finally {
+        dismiss.Cancel();
+    }
+
+
+//Single choice menu with optional cancel and destroy items
+    var cancel = default(CancellationToken); //you can cancel the dialog programatically.
+    var menu = await ui.Menu(cancel, true, "Choose something", "Cancel", null, "item1", "item2", ...); //You can add as many items as your want
+    //returns:
+    //0 => always cancel action (even if not displayed, ie the cancel text is null)
+    //1 => always destroy action (even if not displayed, ie the destroy text is null)
+    //2+ => item1, item2, ...
+    if (menu >= 2)
+	{
+	}
+```
+
+## Documentation
+
+### Single choice menu
 Menu: standard action sheet with single item choice  
 UIAlertController on iOS. AlertDialog on android.
 
@@ -26,7 +60,7 @@ destroy is in red, cancel is separated from the other buttons.
 This is the best UI practice, don't try to change it. 
 
 
-#### Wait indicators with or without progress
+### Wait indicators with or without progress
 ```csharp
 //Displays a wait indicator (title + body + indeterminate progress bar)
 //Returns a controller for the wait indicator
@@ -36,7 +70,7 @@ IWaitIndicator WaitIndicator(CancellationToken dismiss, string message = null, s
 Task ActivityIndicator(CancellationToken dismiss, double? apparitionDelay = null, uint? argbColor = null);
 ```
 
-#### Confirmation prompts and alerts
+### Confirmation prompts and alerts
 
 A `Toast` is an unobtrusive temporary tooltip-like text used to confirm that an action was done succesfully or failed.
 An `Input` is an alert popup with one text field. You can choose the keyboard type to limit to numbers for example.  
@@ -58,79 +92,19 @@ Task<string?> Input(string message, string defaultValue = null, string placehold
 
 If `selectContent` is `true` (default), the text is automatically selected, so when the user starts typing it is replaced.
 
-#### Examples
-```csharp
-//register IUserInteraction in your ioc container (dryioc, shiny, ...)
-services.AddSingleton<IUserInteraction,UserInteraction>();
 
-//confirm
-	var ui = services.Resolve<IUserInteraction>();
-	var ok = await ui.Confirm("Are you sure?");
+### Theme
 
-//wait for an operation to complete
-    var dismiss = new CancellationTokenSource();
-    var userCancelled = ui.WaitIndicator(dismiss.Token, "Please wait", "Loggin in");
-    await Task.Delay(3000, userCancelled); //simulate a long operation
-    dismiss.Cancel();
-
-//display an obtrusive loading indicator
-    var dismiss = new CancellationTokenSource();
-	await ui.ActivityIndicator(dismiss.Token, apparitionDelay: 0.5, argbColor: (uint)0xFFFFFF);
-    await Task.Delay(3000); //simulate a long operation
-    dismiss.Cancel();
-
-
-//Single choice menu with optional cancel and destroy items
-    var cancel = default(CancellationToken); //you can cancel the dialog programatically. Menu will return 0.
-    var menu = await ui.Menu(cancel, true, "Choose something", "Cancel", null, "item1", "item2"); //You can add as many items as your want
-    //returns:
-    //0 => always cancel action (even if not displayed, ie the cancel text is null)
-    //1 => always destroy action (even if not displayed, ie the destroy text is null)
-    //2+ => item1, item2, ...
-    if (menu >= 2)
-	{
-	}
-```
-
-### Theming
-
-Set default color for all activity indicators:
+iOS only: set default color for all activity indicators:
 
 ```csharp
-uint DefaultColor { set; }
+Vapolia.UserInteraction.DefaultColor = 0xAARRGGBB;
 ```
 
-#### On Android
+Android only: this lib uses a standard Android.Material.Dialog that is themed by the material theme as described in the (Google documentation)[https://material.io/components/dialogs/android#theming-dialogs]
 
-Create a theme
+## About
 
-```xml
-<style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-   <!-- Used for the buttons -->
-   <item name="colorAccent">#FFC107</item>
-   <!-- Used for the title and text -->
-   <item name="android:textColorPrimary">#FFFFFF</item>
-   <!-- Used for the background -->
-   <item name="android:background">#4CAF50</item>
-</style>
+License: MIT
 
-In order to change the Appearance of the Title, you can do the following. First add a new style:
-
-<style name="MyTitleTextStyle">
-   <item name="android:textColor">#FFEB3B</item>
-   <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
-</style>
-afterwards simply reference this style in your MyAlertDialogStyle:
-
-<style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-   ...
-   <item name="android:windowTitleStyle">@style/MyTitleTextStyle</item>
-</style>    
-```
-
-Apply theme
-
-```
-var ui = new UserInteraction();
-ui.ThemeResId = Resource.Style.MyAlertDialog;
-```
+Enterprise support available, contact (Vapolia)[https://vapolia.eu]
