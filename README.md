@@ -105,7 +105,8 @@ iOS only: set a default color for all activity indicators:
 Vapolia.UserInteraction.DefaultColor = 0xAARRGGBB;
 ```
 
-Android only: this lib uses a standard Android.Material.Dialog that is themed by the material theme as described in the [Google documentation](https://material.io/components/dialogs/android#theming-dialogs)
+Android only: this lib uses a standard Android.Material.Dialog that is themed by the material theme as described in the [Google documentation](https://material.io/components/dialogs/android#theming-dialogs). Also check [this stackoverflow answer](https://stackoverflow.com/questions/52829954/materialcomponents-theme-alert-dialog-buttons/59110804#59110804) for a sample.
+
 
 ## About
 
