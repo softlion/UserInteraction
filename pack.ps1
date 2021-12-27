@@ -9,7 +9,7 @@ if ($IsMacOS) {
 #####################
 #Build release config
 $version="3.0.0"
-$versionSuffix="-rc3"
+$versionSuffix="-rc4"
 
 del *.nupkg
 & $msbuild "Vapolia.UserInteraction.sln" /restore /p:Configuration=Release /p:Platform="Any CPU" /p:Version="$version" /p:VersionSuffix="$versionSuffix" /p:Deterministic=false /p:PackageOutputPath="$PSScriptRoot" --% /t:Clean;Build;Pack

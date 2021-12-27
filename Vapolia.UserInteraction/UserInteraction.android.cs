@@ -50,7 +50,7 @@ namespace Vapolia.UserInteraction
 		    {
                 activity.RunOnUiThread(() =>
                 {
-                    var dialog = new MaterialAlertDialogBuilder(Xamarin.Essentials.Platform.AppContext)
+                    var dialog = new MaterialAlertDialogBuilder(activity)
                         .SetMessage(message)!
                         .SetTitle(title)!
                         .SetCancelable(false)!
@@ -82,7 +82,7 @@ namespace Vapolia.UserInteraction
 	        var activity = CurrentActivity;
 	        activity?.RunOnUiThread(() =>
 	        {
-	            new MaterialAlertDialogBuilder(Xamarin.Essentials.Platform.AppContext)
+	            new MaterialAlertDialogBuilder(activity)
 	                .SetMessage(message)!
 	                .SetTitle(title)!
 	                .SetPositiveButton(positive, delegate
@@ -109,7 +109,7 @@ namespace Vapolia.UserInteraction
             {
                 activity.RunOnUiThread(() =>
                 {
-                    var dialog = new MaterialAlertDialogBuilder(Xamarin.Essentials.Platform.AppContext)
+                    var dialog = new MaterialAlertDialogBuilder(activity)
                         .SetMessage(message)
                         .SetTitle(title)
                         .SetOnCancelListener(new DialogCancelledListener(() => tcs.TrySetResult(false)))
@@ -135,9 +135,7 @@ namespace Vapolia.UserInteraction
 	        {
                 activity.RunOnUiThread(() =>
                 {
-                    var context = Xamarin.Essentials.Platform.AppContext;
-
-		            var input = new EditText(context) {Hint = placeholder, Text = defaultValue };
+		            var input = new EditText(activity) {Hint = placeholder, Text = defaultValue };
 	                if (fieldType == FieldType.Email)
 	                    input.InputType = InputTypes.ClassText | InputTypes.TextVariationEmailAddress;
 			        else if (fieldType == FieldType.Integer)
@@ -164,7 +162,7 @@ namespace Vapolia.UserInteraction
 	                    input.SetFilters(filters.ToArray());
 	                }
 
-	                var dialog = new MaterialAlertDialogBuilder(context)
+	                var dialog = new MaterialAlertDialogBuilder(activity)
 		                .SetMessage(message)
 		                .SetTitle(title)
 		                .SetView(input)
@@ -173,9 +171,9 @@ namespace Vapolia.UserInteraction
 		                .SetNegativeButton(cancelButton, (_,_) => tcs.TrySetResult(null))
                         .Create();
 
-	                if (context.Resources?.Configuration?.Keyboard == KeyboardType.Nokeys
-	                    || context.Resources?.Configuration?.Keyboard == KeyboardType.Undefined
-	                    || context.Resources?.Configuration?.HardKeyboardHidden == HardKeyboardHidden.Yes)
+	                if (activity.Resources?.Configuration?.Keyboard == KeyboardType.Nokeys
+	                    || activity.Resources?.Configuration?.Keyboard == KeyboardType.Undefined
+	                    || activity.Resources?.Configuration?.HardKeyboardHidden == HardKeyboardHidden.Yes)
 	                {
 	                    //Show keyboard when input has focus
 	                    input.FocusChange += (sender, args) =>
@@ -331,12 +329,11 @@ namespace Vapolia.UserInteraction
                 {
                     activity.RunOnUiThread(() =>
                     {
-                        var context = Xamarin.Essentials.Platform.AppContext;
-                        var layout = new FrameLayout(context) {LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent,ViewGroup.LayoutParams.MatchParent) };
-                        var input = new ProgressBar(context) { Indeterminate = true, LayoutParameters = new FrameLayout.LayoutParams(DpToPixel(100), DpToPixel(100)) {Gravity = GravityFlags.Center}};
+                        var layout = new FrameLayout(activity) {LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent,ViewGroup.LayoutParams.MatchParent) };
+                        var input = new ProgressBar(activity) { Indeterminate = true, LayoutParameters = new FrameLayout.LayoutParams(DpToPixel(100), DpToPixel(100)) {Gravity = GravityFlags.Center}};
                         layout.AddView(input);
 
-                        var builder = new MaterialAlertDialogBuilder(context);
+                        var builder = new MaterialAlertDialogBuilder(activity);
                         builder
                             .SetView(layout)
                             .SetCancelable(false)
@@ -453,7 +450,7 @@ namespace Vapolia.UserInteraction
                             ad?.Dismiss();
                     }
 
-                    var adBuilder = (MaterialAlertDialogBuilder)new MaterialAlertDialogBuilder(Xamarin.Essentials.Platform.AppContext)
+                    var adBuilder = (MaterialAlertDialogBuilder)new MaterialAlertDialogBuilder(activity)
                         .SetTitle(title) //Titles on AlertDialogs are limited to 2 lines, and if SetMessage is used SetItems does not work.
                         .SetCancelable(userCanDismiss);
 
@@ -498,7 +495,7 @@ namespace Vapolia.UserInteraction
             {
                 activity.RunOnUiThread(() =>
                 {
-                    var toast = Android.Widget.Toast.MakeText(Xamarin.Essentials.Platform.AppContext, text, duration == ToastDuration.Short ? ToastLength.Short : ToastLength.Long);
+                    var toast = Android.Widget.Toast.MakeText(activity, text, duration == ToastDuration.Short ? ToastLength.Short : ToastLength.Long);
                     toast?.SetGravity((position == ToastPosition.Bottom ? GravityFlags.Bottom : (position == ToastPosition.Top ? GravityFlags.Top : GravityFlags.CenterVertical))|GravityFlags.CenterHorizontal, 0, positionOffset);
 
                     dismiss?.Register(() => activity.RunOnUiThread(() => toast.Cancel()));
@@ -510,10 +507,10 @@ namespace Vapolia.UserInteraction
 	        else
 	            tcs.TrySetResult(0);
 
-            return tcs.Task;	   
-        }
+            return tcs.Task;
+}
 
-        private static int DpToPixel(float dp) => (int)(dp*((int)global::Android.App.Application.Context.Resources!.DisplayMetrics!.DensityDpi)/160f+.5);
+        private static int DpToPixel(float dp) => (int)(dp*((int)(CurrentActivity?.Resources!.DisplayMetrics!.DensityDpi ?? 0))/160f+.5);
 	}
 
     internal class DialogCancelledListener : Java.Lang.Object, IDialogInterfaceOnCancelListener
