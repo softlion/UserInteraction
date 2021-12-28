@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheDemo.Android", "TheDemo\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheDemo.iOS", "TheDemo\TheDemo.iOS\TheDemo.iOS.csproj", "{76D2460C-18D3-4A2A-9FEF-CF767B549648}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheDemo", "TheDemo\TheDemo\TheDemo.csproj", "{B50204DF-510A-43F0-BA8A-1C0D77461BC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheDemo", "TheDemo\TheDemo\TheDemo.csproj", "{B50204DF-510A-43F0-BA8A-1C0D77461BC0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{40F36E27-C135-4B79-BD8F-D50F04E380DE}"
 EndProject
@@ -51,8 +51,6 @@ Global
 		{82EB19AB-398E-4F76-ACD4-292B4021C25D}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
 		{82EB19AB-398E-4F76-ACD4-292B4021C25D}.Debug|iPhoneSimulator.Deploy.0 = Debug|Any CPU
 		{82EB19AB-398E-4F76-ACD4-292B4021C25D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82EB19AB-398E-4F76-ACD4-292B4021C25D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{82EB19AB-398E-4F76-ACD4-292B4021C25D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{82EB19AB-398E-4F76-ACD4-292B4021C25D}.Release|iPhone.ActiveCfg = Release|Any CPU
 		{82EB19AB-398E-4F76-ACD4-292B4021C25D}.Release|iPhone.Build.0 = Release|Any CPU
 		{82EB19AB-398E-4F76-ACD4-292B4021C25D}.Release|iPhone.Deploy.0 = Release|Any CPU
@@ -76,7 +74,6 @@ Global
 		{B50204DF-510A-43F0-BA8A-1C0D77461BC0}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{B50204DF-510A-43F0-BA8A-1C0D77461BC0}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
 		{B50204DF-510A-43F0-BA8A-1C0D77461BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B50204DF-510A-43F0-BA8A-1C0D77461BC0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B50204DF-510A-43F0-BA8A-1C0D77461BC0}.Release|iPhone.ActiveCfg = Release|Any CPU
 		{B50204DF-510A-43F0-BA8A-1C0D77461BC0}.Release|iPhone.Build.0 = Release|Any CPU
 		{B50204DF-510A-43F0-BA8A-1C0D77461BC0}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
