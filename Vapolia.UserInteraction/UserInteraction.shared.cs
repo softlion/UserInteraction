@@ -24,8 +24,8 @@ namespace Vapolia.UserInteraction
 	    public static Task<string?> Input(string message, string? defaultValue = null, string? placeholder = null, string? title = null, string okButton = "OK", string cancelButton = "Cancel", FieldType fieldType = FieldType.Default, int maxLength = 0, bool selectContent = true)
             => PlatformInput(message, defaultValue, placeholder, title, okButton, cancelButton, fieldType, maxLength, selectContent);
 
-	    public static void ConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> answer, string? title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
-            => PlatformConfirmThreeButtons(message, answer, title, positive, negative, neutral);
+        public static Task<ConfirmThreeButtonsResponse> ConfirmThreeButtons(string message, string? title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
+            => PlatformConfirmThreeButtons(message, title, positive, negative, neutral);
 
 	    /// <summary>
 	    /// Displays a wait indicator (title + body + indeterminate progress bar)
@@ -73,7 +73,13 @@ namespace Vapolia.UserInteraction
         /// </remarks>
         public static Task<int> Menu(CancellationToken dismiss, bool userCanDismiss, string? title, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
             => PlatformMenu(dismiss, userCanDismiss, title, description, defaultActionIndex, cancelButton, destroyButton, otherButtons);
-	    
+
+        /// <summary>
+        /// Shortcut
+        /// </summary>
+        public static Task<int> Menu(string? title, string? description = null, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
+            => PlatformMenu(CancellationToken.None, true, title, description, -1, cancelButton, destroyButton, otherButtons);
+
 
         /// <summary>
         /// Display a toast

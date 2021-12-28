@@ -11,7 +11,7 @@ namespace Vapolia.UserInteraction
         internal static Task<bool> PlatformConfirm(string message, string? title, string okButton, string cancelButton, CancellationToken? dismiss)
             => throw new NotImplementedException();
 
-	    internal static void PlatformConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> answer, string? title, string positive, string negative, string neutral)
+	    internal static Task<ConfirmThreeButtonsResponse> PlatformConfirmThreeButtons(string message, string? title, string positive, string negative, string neutral)
             => throw new NotImplementedException();
 
 		internal static Task PlatformAlert(string message, string title, string okButton)

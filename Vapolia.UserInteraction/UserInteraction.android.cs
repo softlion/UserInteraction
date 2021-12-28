@@ -77,29 +77,31 @@ namespace Vapolia.UserInteraction
 		    return tcs.Task;
 		}
 
-	    internal static void PlatformConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> answer, string? title, string positive, string negative, string neutral)
+	    internal static Task<ConfirmThreeButtonsResponse> PlatformConfirmThreeButtons(string message, string? title, string positive, string negative, string neutral)
 	    {
 	        var activity = CurrentActivity;
+            var tcs = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
 	        activity?.RunOnUiThread(() =>
 	        {
 	            new MaterialAlertDialogBuilder(activity)
 	                .SetMessage(message)!
 	                .SetTitle(title)!
 	                .SetPositiveButton(positive, delegate
-	                {
-                        answer.Invoke(ConfirmThreeButtonsResponse.Positive);
+                    {
+                        tcs.TrySetResult(ConfirmThreeButtonsResponse.Positive);
                     })!
 	                .SetNegativeButton(negative, delegate
 	                {
-                        answer.Invoke(ConfirmThreeButtonsResponse.Negative);
+                        tcs.TrySetResult(ConfirmThreeButtonsResponse.Negative);
                     })!
 	                .SetNeutralButton(neutral, delegate
 	                {
-                        answer.Invoke(ConfirmThreeButtonsResponse.Neutral);
+                        tcs.TrySetResult(ConfirmThreeButtonsResponse.Neutral);
                     })!
 	                .Show();
 	        });
-	    }
+            return tcs.Task;
+        }
 
 		internal static Task PlatformAlert(string message, string title, string okButton)
 		{
@@ -418,7 +420,7 @@ namespace Vapolia.UserInteraction
 	                    //cancelButtonIndex = items.Count - 1;
 	                //}
 
-	                AlertDialog? ad = null;
+	                AlertDialog ad = null!;
 
                     void OnItemSelected(DialogClickEventArgs args, bool closeOnSelect)
                     {
@@ -447,7 +449,7 @@ namespace Vapolia.UserInteraction
                         }
 
                         if(closeOnSelect)
-                            ad?.Dismiss();
+                            ad.Dismiss();
                     }
 
                     var adBuilder = (MaterialAlertDialogBuilder)new MaterialAlertDialogBuilder(activity)
@@ -459,9 +461,10 @@ namespace Vapolia.UserInteraction
                     else
                         adBuilder.SetSingleChoiceItems(items.Where(b => b != null).ToArray(), defaultActionIndex - 2 + (destructiveButtonIndex >= 0 ? 1 : 0), (sender, args) => OnItemSelected(args, true));
 
-
-                    if (description != null)
-                        adBuilder.SetMessage(description);
+                    //Setting a description hide the items. This is by design in the dialog template.
+                    //https://stackoverflow.com/questions/10714911/alertdialogs-items-not-displayed
+                    //if (description != null)
+                    //    adBuilder.SetMessage(description);
 
                     ad = adBuilder.Create();
                     ad.SetCanceledOnTouchOutside(userCanDismiss);
@@ -496,10 +499,13 @@ namespace Vapolia.UserInteraction
                 activity.RunOnUiThread(() =>
                 {
                     var toast = Android.Widget.Toast.MakeText(activity, text, duration == ToastDuration.Short ? ToastLength.Short : ToastLength.Long);
-                    toast?.SetGravity((position == ToastPosition.Bottom ? GravityFlags.Bottom : (position == ToastPosition.Top ? GravityFlags.Top : GravityFlags.CenterVertical))|GravityFlags.CenterHorizontal, 0, positionOffset);
+                    if(toast != null)
+                    {
+                        toast.SetGravity((position == ToastPosition.Bottom ? GravityFlags.Bottom : (position == ToastPosition.Top ? GravityFlags.Top : GravityFlags.CenterVertical))|GravityFlags.CenterHorizontal, 0, positionOffset);
 
-                    dismiss?.Register(() => activity.RunOnUiThread(() => toast.Cancel()));
-                    toast?.Show();
+                        dismiss?.Register(() => activity.RunOnUiThread(() => toast.Cancel()));
+                        toast.Show();
+                    }
 
                     tcs.TrySetResult(0);
                 });

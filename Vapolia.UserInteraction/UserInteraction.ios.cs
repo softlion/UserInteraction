@@ -45,27 +45,26 @@ namespace Vapolia.UserInteraction
 		    return tcs.Task;
 		}
 
-        internal static void PlatformConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> answer, string? title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
+        internal static Task<ConfirmThreeButtonsResponse> PlatformConfirmThreeButtons(string message, string? title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe")
         {
+            var tcs = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
             UIApplication.SharedApplication.InvokeOnMainThread(() =>
             {
                 var confirm = new UIAlertView(title ?? string.Empty, message, (IUIAlertViewDelegate?)null, negative, positive, neutral);
-                if (answer != null)
-                {
-                    confirm.Clicked +=
-                        (sender, args) =>
-                        {
-                            var buttonIndex = args.ButtonIndex;
-                            if (buttonIndex == confirm.CancelButtonIndex)
-                                answer(ConfirmThreeButtonsResponse.Negative);
-                            else if (buttonIndex == confirm.FirstOtherButtonIndex)
-                                answer(ConfirmThreeButtonsResponse.Positive);
-                            else
-                                answer(ConfirmThreeButtonsResponse.Neutral);
-                        };
-                    confirm.Show();
-                }
+                confirm.Clicked +=
+                    (sender, args) =>
+                    {
+                        var buttonIndex = args.ButtonIndex;
+                        if (buttonIndex == confirm.CancelButtonIndex)
+                            tcs.TrySetResult(ConfirmThreeButtonsResponse.Negative);
+                        else if (buttonIndex == confirm.FirstOtherButtonIndex)
+                            tcs.TrySetResult(ConfirmThreeButtonsResponse.Positive);
+                        else
+                            tcs.TrySetResult(ConfirmThreeButtonsResponse.Neutral);
+                    };
+                confirm.Show();
             });
+            return tcs.Task;
         }
 
 		internal static Task PlatformAlert(string message, string title = "", string okButton = "OK")
@@ -328,7 +327,7 @@ namespace Vapolia.UserInteraction
 
 	        UIApplication.SharedApplication.InvokeOnMainThread(() =>
             {
-                var currentView = presentingVc.View;
+                var currentView = presentingVc.View!;
 
                 var alertController = UIAlertController.Create(title, description, UIAlertControllerStyle.ActionSheet);
                 alertController.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
@@ -346,7 +345,7 @@ namespace Vapolia.UserInteraction
                 if (destroyButton != null)
                     alertController.AddAction(UIAlertAction.Create(destroyButton, UIAlertActionStyle.Destructive, action => tcs.TrySetResult(1)));
 
-                UIAlertAction defaultAction = null;
+                UIAlertAction? defaultAction = null;
                 var iAction = 2;
                 foreach (var button in otherButtons)
                 {
@@ -392,7 +391,7 @@ namespace Vapolia.UserInteraction
 
             UIApplication.SharedApplication.InvokeOnMainThread(() =>
             {
-                var currentView = presentingVc.View;
+                var currentView = presentingVc.View!;
 
                 //UI items
                 var font = UIFont.SystemFontOfSize(UIFont.SmallSystemFontSize);

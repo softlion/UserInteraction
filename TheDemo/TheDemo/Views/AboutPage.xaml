@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TheDemo.Views.AboutPage"
+             xmlns:vm="clr-namespace:TheDemo.ViewModels"
+             BackgroundColor="#535"
+             Title="UserInteraction Demo">
+    
+    <ContentPage.BindingContext>
+        <vm:AboutViewModel />
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Resources>
+        <Color x:Key="Accent">#96d1ff</Color>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="Black" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
+                <ContentView Padding="0,20,0,20" VerticalOptions="FillAndExpand">
+                    <Label Text="UserInteraction Demo" FontSize="Title" />
+                </ContentView>
+            </StackLayout>
+        </StackLayout>
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="30,24,30,24" Spacing="10">
+                <Button Text="Alert" Command="{Binding AlertCommand}" />
+                <Button Text="Menu" Command="{Binding MenuCommand}" />
+                <Button Text="Toast" Command="{Binding ToastCommand}" />
+                <Button Text="Confirm" Command="{Binding ConfirmCommand}" />
+                <Button Text="Confirm 3 buttons" Command="{Binding Confirm3Command}" />
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+
+</ContentPage>
