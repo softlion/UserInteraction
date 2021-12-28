@@ -97,15 +97,32 @@ Task<string?> Input(string message, string defaultValue = null, string placehold
 
 If `selectContent` is `true` (default), the text is automatically selected, so when the user starts typing it is replaced.
 
+### Setup
+
+On Android only, add `colorSurface` to your application's style:
+
+```xml
+  <style name="MainTheme" parent="MainTheme.Base">
+
+    <!-- Required -->
+    <item name="colorSurface">#333333</item>
+
+  </style>
+```
+
 ### Theme
 
-iOS only: set a default color for all activity indicators:
+#### iOS
+set a default color for all activity indicators:
 
 ```csharp
 Vapolia.UserInteraction.DefaultColor = 0xAARRGGBB;
 ```
 
-Android only: this lib uses a standard Android.Material.Dialog that is themed by the material theme as described in the [Google documentation](https://material.io/components/dialogs/android#theming-dialogs). Also check [this stackoverflow answer](https://stackoverflow.com/questions/52829954/materialcomponents-theme-alert-dialog-buttons/59110804#59110804) for a sample.
+#### Android
+This lib uses a standard `Android.Material.Dialog` that is themed by the material theme as described in the [Google documentation](https://material.io/components/dialogs/android#theming-dialogs). 
+
+Also check [this stackoverflow answer](https://stackoverflow.com/questions/52829954/materialcomponents-theme-alert-dialog-buttons/59110804#59110804) for a sample.
 
 
 ## About
