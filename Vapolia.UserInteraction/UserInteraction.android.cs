@@ -481,9 +481,10 @@ namespace Vapolia.UserInteraction
 		                var layoutParams = ad.Window?.Attributes;
 		                if (layoutParams != null)
 		                {
-			                layoutParams.Gravity = GravityFlags.Bottom | GravityFlags.Left;
+			                layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
 			                layoutParams.X = DpToPixel(position.Value.Left);
-			                layoutParams.Y = DpToPixel(position.Value.Top);
+			                //From bottom of screen
+			                layoutParams.Y = (int)Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Height - DpToPixel(position.Value.Top);
 		                }
 	                }
 
