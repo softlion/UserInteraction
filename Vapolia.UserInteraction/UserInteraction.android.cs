@@ -485,6 +485,7 @@ namespace Vapolia.UserInteraction
 			                layoutParams.X = DpToPixel(position.Value.Left);
 			                //From bottom of screen
 			                layoutParams.Y = (int)Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Height - DpToPixel(position.Value.Top);
+			                ad.Window!.Attributes = layoutParams;
 		                }
 	                }
 
