@@ -55,6 +55,7 @@ namespace Vapolia.UserInteraction
         /// </summary>
         /// <param name="dismiss">optional. Can be used to close the menu programatically.</param>
         /// <param name="userCanDismiss">true to allow the user to close the menu using a hardware key.</param>
+        /// <param name="position">optional absolute position on screen</param>
         /// <param name="title">optional title</param>
         /// <param name="description">optional description</param>
         /// <param name="defaultActionIndex">from 2 to 2+number of actions. Otherwise ignored.</param>
@@ -71,15 +72,20 @@ namespace Vapolia.UserInteraction
         /// If otherButtons is null, the indexes are still incremented, but the button won't appear. 
         /// This enables easy scenario where the otherButtons array is changing between calls.
         /// </remarks>
+        public static Task<int> Menu(CancellationToken dismiss, bool userCanDismiss, System.Drawing.RectangleF? position, string? title, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
+            => PlatformMenu(dismiss, userCanDismiss, position, title, description, defaultActionIndex, cancelButton, destroyButton, otherButtons);
+
+        /// <summary>
+        /// Shortcut
+        /// </summary>
         public static Task<int> Menu(CancellationToken dismiss, bool userCanDismiss, string? title, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
-            => PlatformMenu(dismiss, userCanDismiss, title, description, defaultActionIndex, cancelButton, destroyButton, otherButtons);
+	        => PlatformMenu(dismiss, userCanDismiss, null, title, description, defaultActionIndex, cancelButton, destroyButton, otherButtons);
 
         /// <summary>
         /// Shortcut
         /// </summary>
         public static Task<int> Menu(string? title, string? description = null, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
-            => PlatformMenu(CancellationToken.None, true, title, description, -1, cancelButton, destroyButton, otherButtons);
-
+            => PlatformMenu(CancellationToken.None, true, null, title, description, -1, cancelButton, destroyButton, otherButtons);
 
         /// <summary>
         /// Display a toast

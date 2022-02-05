@@ -379,20 +379,23 @@ namespace Vapolia.UserInteraction
         /// This enables easy scenario where the otherButtons array is changing between calls.
         /// </summary>
         /// <param name="dismiss"></param>
-        /// <param name="userCanDismiss"></param>
+        /// <param name="userCanDismiss">true if the user can cancel the menu using the android gesture or button</param>
+        /// <param name="position">optional: position from top left of screen</param>
         /// <param name="title"></param>
-        /// <param name="description">optional</param>
+        /// <param name="description">NOT SUPPORTED ON ANDROID (setting it hides the items by design with the default template)</param>
         /// <param name="defaultActionIndex">from 2 to 2+number of actions. Otherwise ignored.</param>
-        /// <param name="cancelButton">optional</param>
+        /// <param name="cancelButton">NOT DISPLAYED ON ANDROID (use the standard dismiss gesture instead)</param>
         /// <param name="destroyButton">optional</param>
-        /// <param name="otherButtons">If a button is null, the index are still incremented, but the button won't appear</param>
+        /// <param name="otherButtons">If a button is null, the indexes are still incremented, but the button won't appear</param>
         /// <returns>
         /// Button indexes:
         /// cancel: 0 (never displayed on Android. Use hardware back button instead)
         /// destroy: 1
         /// others: 2+index
         /// </returns>
-        internal static Task<int> PlatformMenu(CancellationToken dismiss, bool userCanDismiss, string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
+        internal static Task<int> PlatformMenu(CancellationToken dismiss, bool userCanDismiss,
+	        System.Drawing.RectangleF? position = null,
+	        string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
         {
             var tcs = new TaskCompletionSource<int>();
 
@@ -468,10 +471,23 @@ namespace Vapolia.UserInteraction
 
                     ad = adBuilder.Create();
                     ad.SetCanceledOnTouchOutside(userCanDismiss);
-
 	                ad.CancelEvent += (sender, args) => CancelAction();
 	                ad.DismissEvent += (sender, args) => CancelAction();
-                    ad.Show();
+	                
+	                ad.RequestWindowFeature((int)WindowFeatures.NoTitle);
+
+	                if (position != null)
+	                {
+		                var layoutParams = ad.Window?.Attributes;
+		                if (layoutParams != null)
+		                {
+			                layoutParams.Gravity = GravityFlags.Bottom | GravityFlags.Left;
+			                layoutParams.X = DpToPixel(position.Value.Left);
+			                layoutParams.Y = DpToPixel(position.Value.Top);
+		                }
+	                }
+
+	                ad.Show();
 
 	                dismiss.Register(() =>
 	                {

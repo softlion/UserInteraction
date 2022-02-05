@@ -301,7 +301,8 @@ namespace Vapolia.UserInteraction
         /// This enables easy scenario where the otherButtons array is changing between calls.
         /// </summary>
         /// <param name="dismiss"></param>
-        /// <param name="userCanDismiss"></param>
+        /// <param name="userCanDismiss">NOT SUPPORTED ON IOS</param>
+        /// <param name="position">optional: position from top left of screen</param>
         /// <param name="title"></param>
         /// <param name="description">optional</param>
         /// <param name="defaultActionIndex">from 2 to 2+number of actions. Otherwise ignored.</param>
@@ -314,7 +315,9 @@ namespace Vapolia.UserInteraction
         /// destroy: 1
         /// others: 2+index
         /// </returns>
-        internal static Task<int> PlatformMenu(CancellationToken dismiss, bool userCanDismiss, string? title, string? description, int defaultActionIndex, string? cancelButton, string? destroyButton, params string?[] otherButtons)
+        internal static Task<int> PlatformMenu(CancellationToken dismiss, bool userCanDismiss,
+            System.Drawing.RectangleF? position = null,
+            string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
         {
             var presentingVc = Platform.GetCurrentUIViewController();
             if (presentingVc == null)
@@ -337,7 +340,7 @@ namespace Vapolia.UserInteraction
                     alertController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
                     var presenter = alertController.PopoverPresentationController;
                     presenter.SourceView = currentView;
-                    presenter.SourceRect = new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1);
+                    presenter.SourceRect = position ?? new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1);
                 }
 
                 if (cancelButton != null)
