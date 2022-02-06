@@ -473,18 +473,16 @@ namespace Vapolia.UserInteraction
                     ad.SetCanceledOnTouchOutside(userCanDismiss);
 	                ad.CancelEvent += (sender, args) => CancelAction();
 	                ad.DismissEvent += (sender, args) => CancelAction();
-	                
-	                ad.RequestWindowFeature((int)WindowFeatures.NoTitle);
 
 	                if (position != null)
 	                {
+		                //ad.RequestWindowFeature((int)WindowFeatures.NoTitle);
 		                var layoutParams = ad.Window?.Attributes;
 		                if (layoutParams != null)
 		                {
 			                layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
 			                layoutParams.X = DpToPixel(position.Value.Left);
-			                //From bottom of screen
-			                layoutParams.Y = (int)Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Height - DpToPixel(position.Value.Top);
+			                layoutParams.Y = DpToPixel(position.Value.Top);
 			                ad.Window!.Attributes = layoutParams;
 		                }
 	                }
