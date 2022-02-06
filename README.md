@@ -124,6 +124,9 @@ This lib uses a standard `Android.Material.Dialog` that is themed by the materia
 
 Also check [this stackoverflow answer](https://stackoverflow.com/questions/52829954/materialcomponents-theme-alert-dialog-buttons/59110804#59110804) for a sample.
 
+### Xamarin Forms
+
+To get the tapped item's rectangle on Xamarin Forms, use [this gist](https://gist.github.com/softlion/5a845180c51b90c8624187273cef9193)
 
 ## About
 
