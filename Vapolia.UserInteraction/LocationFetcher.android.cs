@@ -13,7 +13,7 @@ namespace XamSvg.XamForms
                 var locationWindow = new int[2];
                 nativeView.GetLocationInWindow(locationWindow);
                 var locationOfRootWindow = new int[2];
-                nativeView.RootView.FindViewById(Android.Resource.Id.Content).GetLocationInWindow(locationOfRootWindow);
+                nativeView.RootView?.FindViewById(Android.Resource.Id.Content)?.GetLocationInWindow(locationOfRootWindow);
             
                 return new System.Drawing.PointF(locationWindow[0] / density, (locationWindow[1]-locationOfRootWindow[1]) / density);
             }
