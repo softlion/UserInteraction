@@ -132,4 +132,5 @@ To get the tapped item's rectangle on Xamarin Forms, use [this gist](https://gis
 
 License: MIT
 
-Enterprise support available, contact [Vapolia](https://vapolia.eu)
+Enterprise support available, contact [Vapolia](https://vapolia.eu) through the live chat.
+

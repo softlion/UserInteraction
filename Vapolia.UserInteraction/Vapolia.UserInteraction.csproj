@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- net6.0-android;net6.0-ios -->
-    <TargetFrameworks>netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;Xamarin.iOS10;MonoAndroid10.0;MonoAndroid12.0;uap10.0.16299</TargetFrameworks>
     <AssemblyName>Vapolia.UserInteraction</AssemblyName>
     <RootNamespace>Vapolia.UserInteraction</RootNamespace>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
@@ -14,11 +14,12 @@
   <ItemGroup>
     <Compile Include="**\*.shared.cs" />
     <Compile Include="**\*.shared.*.cs" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.2" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
   </ItemGroup>
   
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) or $(TargetFramework.StartsWith('net6')) ">
     <Compile Include="**\*.netstandard.cs" />
     <Compile Include="**\*.netstandard.*.cs" />
   </ItemGroup>
@@ -35,6 +36,12 @@
     <PackageReference Include="Cirrious.FluentLayout" Version="2.9.0" />
   </ItemGroup>
 
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
+    <Compile Include="**\*.uap.cs" />
+    <Compile Include="**\*.uap.*.cs" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.13" />
+  </ItemGroup>
+
   <!--  nuget configurable properties -->
   <PropertyGroup>
     <Version>0.0.0-pre1</Version>
@@ -47,7 +54,7 @@
     <PackageId>Vapolia.UserInteraction</PackageId>
     <!--    <PackageIconUrl>https://github.com/softlion/XamarinFormsGesture/favicon.ico</PackageIconUrl>-->
     <Summary>Confirm, Alert, Menu, Toast, ... for xamarin (native, forms, with any mvvm framework)</Summary>
-    <PackageTags>user interaction picker xamarin ios android forms</PackageTags>
+    <PackageTags>user interaction picker maui xamarin ios android forms</PackageTags>
     <Title>A 'UserInteraction' plugin for xamarin with Confirm, Alert, Menu, Toast, ActivityIndicator, ...</Title>
     <Description>
       Content: Confirm, Alert, Menu, Toast, ActivityIndicator, Input, ...
@@ -68,6 +75,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/softlion/UserInteraction</PackageProjectUrl>
     <PackageReleaseNotes>
+      3.0.1: supports android 12.0. No more interface (like xamarin.essentials)
       2.0.5: update nugets for Android
       2.0.1: now supports decimal input types
       2.0.0: now framework independant!
