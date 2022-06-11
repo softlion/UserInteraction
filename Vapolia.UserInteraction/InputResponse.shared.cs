@@ -1,5 +1,3 @@
-using System;
-
 namespace Vapolia.UserInteraction
 {
 	public class InputResponse

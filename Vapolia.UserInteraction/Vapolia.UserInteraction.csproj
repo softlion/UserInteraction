@@ -1,22 +1,25 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- net6.0-android;net6.0-ios;uap10.0.16299 -->
-    <TargetFrameworks>netstandard2.0;Xamarin.iOS10;MonoAndroid10.0</TargetFrameworks>
+<!--    <TargetFrameworks>netstandard2.1;Xamarin.iOS10;MonoAndroid10.0;net6.0-android;net6.0-ios</TargetFrameworks>-->
+    <TargetFrameworks>net6.0-android;net6.0-ios</TargetFrameworks>
     <AssemblyName>Vapolia.UserInteraction</AssemblyName>
     <RootNamespace>Vapolia.UserInteraction</RootNamespace>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <DebugType>portable</DebugType>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <UseMaui Condition="$(TargetFramework.StartsWith('net6.0-'))">true</UseMaui>
+<!--    <SingleProject>true</SingleProject>-->
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">26.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="**\*.shared.cs" />
     <Compile Include="**\*.shared.*.cs" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.2" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
   </ItemGroup>
   
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
@@ -24,22 +27,15 @@
     <Compile Include="**\*.netstandard.*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) or $(TargetFramework.StartsWith('net6.0-android'))">
     <Compile Include="**\*.android.cs" />
     <Compile Include="**\*.android.*.cs" />
-    <PackageReference Include="Xamarin.Google.Android.Material" Version="1.4.0.4" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) or $(TargetFramework.StartsWith('net6.0-ios')) ">
     <Compile Include="**\*.ios.cs" />
     <Compile Include="**\*.ios.*.cs" />
-    <PackageReference Include="Cirrious.FluentLayout" Version="2.9.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
-    <Compile Include="**\*.uap.cs" />
-    <Compile Include="**\*.uap.*.cs" />
-    <!--<PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.13" />-->
+    <PackageReference Include="Vapolia.FluentLayouts" Version="1.0.0-ci2480247012" />
   </ItemGroup>
 
   <!--  nuget configurable properties -->
@@ -51,7 +47,7 @@
 
   <!--  nuget properties -->
   <PropertyGroup>
-    <PackageId>Vapolia.UserInteraction</PackageId>
+    <PackageId>Vapolia.UserInteraction.Maui</PackageId>
     <!--    <PackageIconUrl>https://github.com/softlion/XamarinFormsGesture/favicon.ico</PackageIconUrl>-->
     <Summary>Confirm, Alert, Menu, Toast, ... for xamarin (native, forms, with any mvvm framework)</Summary>
     <PackageTags>user interaction picker maui xamarin ios android forms</PackageTags>
@@ -75,6 +71,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/softlion/UserInteraction</PackageProjectUrl>
     <PackageReleaseNotes>
+      4.0.0: supports MAUI. Moved location fetcher to a standalone nuget.
       3.0.1: supports android 12.0. No more interface (like xamarin.essentials)
       2.0.5: update nugets for Android
       2.0.1: now supports decimal input types

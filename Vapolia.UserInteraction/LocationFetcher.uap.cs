@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Xamarin.Forms;
 
-namespace XamSvg.XamForms
+namespace Vapolia.UserInteraction
 {
     public static partial class LocationFetcher
     {
