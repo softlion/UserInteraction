@@ -5,7 +5,6 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C6C2BCE6-73AC-4EDC-A08D-B12B2FF434CB}"
 	ProjectSection(SolutionItems) = preProject
-		pack.ps1 = pack.ps1
 		readme.md = readme.md
 	EndProjectSection
 EndProject

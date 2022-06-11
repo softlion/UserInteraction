@@ -4,7 +4,12 @@ Compatibility: Android, iOS
 
 All features are static async and uses Xamarin.Essentials to get the display context.
 
-[![NuGet](https://img.shields.io/nuget/v/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)  
+Maui  
+[![NuGet Maui](https://img.shields.io/nuget/v/Vapolia.UserInteraction.Maui.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction.Maui/)  
+![Nuget](https://img.shields.io/nuget/dt/Vapolia.UserInteraction.Maui)
+
+Xamarin  
+[![NuGet Xamarin](https://img.shields.io/nuget/v/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)  
 ![Nuget](https://img.shields.io/nuget/dt/Vapolia.UserInteraction)
 
 

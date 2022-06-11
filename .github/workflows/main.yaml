@@ -30,7 +30,7 @@ jobs:
       - name: Install MAUI workload
         run: dotnet workload install maui
       - name: Build
-        run: dotnet build -c Release
+        run: dotnet build -c Release Vapolia.UserInteraction\Vapolia.UserInteraction.csproj
       - name: Package NuGets
         shell: pwsh
         run: |
@@ -42,7 +42,7 @@ jobs:
           echo "PACKAGE VERSION: $VERSION"
           
           New-Item -ItemType Directory -Force -Path .\artifacts
-          dotnet pack --output ./artifacts -c Release -p:PackageVersion=$VERSION
+          dotnet pack --output ./artifacts -c Release -p:PackageVersion=$VERSION Vapolia.UserInteraction\Vapolia.UserInteraction.csproj
 #$pfxPath = Join-Path -Path $pwd -ChildPath "codesigncert.pfx"
 #[IO.File]::WriteAllBytes("$pfxPath", [System.Convert]::FromBase64String($env:CODESIGN_PFX))
 #nuget sign .\artifacts\*.nupkg -CertificatePath $pfxPath -Timestamper http://timestamp.entrust.net/TSS/RFC3161sha2TS
