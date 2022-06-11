@@ -1,4 +1,4 @@
-# User Interaction for Xamarin (Xamarin.Essentials syle)
+# User Interaction for Maui
 
 Compatibility: Android, iOS
 
