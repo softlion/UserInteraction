@@ -15,6 +15,8 @@ using String = System.String;
 using AndroidX.Core.OS;
 using Activity = Android.App.Activity;
 using AndroidX.AppCompat.App;
+using Google.Android.Material.Snackbar;
+using Microsoft.Maui.Platform;
 using Color = Android.Graphics.Color;
 using ProgressBar = Android.Widget.ProgressBar;
 
@@ -33,7 +35,7 @@ public partial class UserInteraction
 		{
 			var activity = Platform.CurrentActivity;
 			if(activity == null)
-				Log?.LogWarning("UserInteraction: IMvxAndroidCurrentTopActivity.Activity is null!");
+				Log?.LogWarning("UserInteraction: Platform.CurrentActivity is null!");
 			return activity;
 		}
 	}
@@ -506,17 +508,29 @@ public partial class UserInteraction
 		var tcs = new TaskCompletionSource<int>();
 
 		var activity = CurrentActivity;
-		if (activity != null)
+		var view = activity?.Window?.DecorView.RootView;
+		if (view != null)
 		{
 			activity.RunOnUiThread(() =>
 			{
-				var toast = Android.Widget.Toast.MakeText(activity, text, duration == ToastDuration.Short ? ToastLength.Short : ToastLength.Long);
-				if(toast != null)
+				var snackBar = Snackbar.Make(activity, view, text, duration == ToastDuration.Short ? BaseTransientBottomBar.LengthShort : BaseTransientBottomBar.LengthLong);
+				//var toast = Android.Widget.Toast.MakeText(activity, text, duration == ToastDuration.Short ? ToastLength.Short : ToastLength.Long);
+				if(snackBar != null)
 				{
-					toast.SetGravity((position == ToastPosition.Bottom ? GravityFlags.Bottom : (position == ToastPosition.Top ? GravityFlags.Top : GravityFlags.CenterVertical))|GravityFlags.CenterHorizontal, 0, positionOffset);
+					var color = Constants.ToastStyleBackgroundTint[(int)style];
+					if(color != null)
+						snackBar.SetBackgroundTint(color.ToPlatform());
+					
+					var layoutParams = snackBar.View.LayoutParameters as FrameLayout.LayoutParams;
+					if (layoutParams != null)
+					{
+						layoutParams.Gravity = position == ToastPosition.Bottom ? GravityFlags.Bottom : (position == ToastPosition.Top ? GravityFlags.Top : GravityFlags.CenterVertical);
+						layoutParams.SetMargins(0, position == ToastPosition.Top ? positionOffset : 0, 0, position == ToastPosition.Bottom ? positionOffset : 0);
+						snackBar.View.LayoutParameters = layoutParams;
+					}
 
-					dismiss?.Register(() => activity.RunOnUiThread(() => toast.Cancel()));
-					toast.Show();
+					dismiss?.Register(() => activity.RunOnUiThread(() => snackBar.Dismiss()));
+					snackBar.Show();
 				}
 
 				tcs.TrySetResult(0);

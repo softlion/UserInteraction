@@ -1,9 +1,5 @@
 ﻿namespace Vapolia.UserInteraction
 {
-    //   public interface IUserInteraction
-    //{
-    //}
-
     public enum ToastStyle
     {
         Custom,
@@ -11,5 +7,17 @@
         Notice,
         Warning,
         Error
+    }
+
+    public static class Constants
+    {
+        public static Color[] ToastStyleBackgroundTint =
+        {
+            null,
+            null,
+            null,
+            Colors.Orange,
+            Colors.Red, 
+        };
     }
 }

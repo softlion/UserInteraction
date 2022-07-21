@@ -30,7 +30,7 @@ public class MainViewModel
             await UserInteraction.Alert(text, "Selected item is:", "Close");
         });
 
-        ToastCommand = new Command(async () => { await UserInteraction.Toast("This is a message", ToastStyle.Warning); });
+        ToastCommand = new Command(async () => { await UserInteraction.Toast("This is a message", ToastStyle.Warning, ToastDuration.Normal, ToastPosition.Bottom, 100); });
 
         ConfirmCommand = new Command(async () =>
         {
