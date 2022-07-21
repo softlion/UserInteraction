@@ -3,8 +3,8 @@ name: Publish To Nuget
 on:
 #  pull_request:
 #  push:
-#  release:
-#    types: [published]
+  release:
+    types: [published]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     
@@ -36,7 +36,8 @@ jobs:
         run: |
           $VERSION="$env:NUPKG_MAJOR-ci$env:GITHUB_RUN_ID"
           if ($env:GITHUB_EVENT_NAME -eq "release") {
-            $VERSION = $env:GITHUB_REF.Substring($env:GITHUB_REF.LastIndexOf('/') + 1)
+#           $VERSION = $env:GITHUB_REF.Substring($env:GITHUB_REF.LastIndexOf('/') + 1)
+            $VERSION = "$env:NUPKG_MAJOR"
           }
           echo "::set-output name=pkgverci::$VERSION"
           echo "PACKAGE VERSION: $VERSION"

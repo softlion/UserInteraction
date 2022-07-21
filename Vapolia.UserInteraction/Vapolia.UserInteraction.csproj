@@ -71,6 +71,8 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/softlion/UserInteraction</PackageProjectUrl>
     <PackageReleaseNotes>
+      --- version is now 1.0.0
+      4.0.1: replace android toast by a snackbar, and make its background color customizable.
       4.0.0: supports MAUI. Moved location fetcher to a standalone nuget.
       3.0.1: supports android 12.0. No more interface (like xamarin.essentials)
       2.0.5: update nugets for Android
