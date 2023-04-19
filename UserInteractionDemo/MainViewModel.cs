@@ -7,13 +7,16 @@ public class MainViewModel
 {
     public ICommand AlertCommand { get; }
     public ICommand MenuCommand { get; }
-    public object ToastCommand { get; }
-    public object ConfirmCommand { get; }
-    public object Confirm3Command { get; }
+    public ICommand ToastCommand { get; }
+    public ICommand ConfirmCommand { get; }
+    public ICommand Confirm3Command { get; }
 
     public MainViewModel()
     {
-        AlertCommand = new Command(async () => { await UserInteraction.Alert("This is a message", "Optional title", "OK"); });
+        AlertCommand = new Command(async () =>
+        {
+            await UserInteraction.Alert("This is a message", "Optional title", "OK");
+        });
 
         MenuCommand = new Command(async () =>
         {
@@ -25,12 +28,16 @@ public class MainViewModel
                 2 => "Option 1",
                 3 => "Option 2",
                 4 => "Option 3",
+                _ => throw new NotSupportedException()
             };
 
             await UserInteraction.Alert(text, "Selected item is:", "Close");
         });
 
-        ToastCommand = new Command(async () => { await UserInteraction.Toast("This is a message", ToastStyle.Warning, ToastDuration.Normal, ToastPosition.Bottom, 100); });
+        ToastCommand = new Command(async () =>
+        {
+            await UserInteraction.Toast("This is a message", ToastStyle.Warning, ToastDuration.Normal, ToastPosition.Bottom, 100);
+        });
 
         ConfirmCommand = new Command(async () =>
         {
@@ -45,7 +52,8 @@ public class MainViewModel
             {
                 ConfirmThreeButtonsResponse.Negative => "Cancelled",
                 ConfirmThreeButtonsResponse.Positive => "Done!",
-                ConfirmThreeButtonsResponse.Neutral => "I'll ask you later!"
+                ConfirmThreeButtonsResponse.Neutral => "I'll ask you later!",
+                _ => throw new NotSupportedException()
             };
             await UserInteraction.Toast(text, ToastStyle.Notice);
         });

@@ -1,9 +1,8 @@
-﻿namespace Vapolia.UserInteraction
+﻿namespace Vapolia.UserInteraction;
+
+public enum ToastDuration
 {
-    public enum ToastDuration
-    {
-        Short = 1000,
-        Normal = 2500,
-        Long = 8000
-    }
+    Short = 1000,
+    Normal = 2500,
+    Long = 8000
 }

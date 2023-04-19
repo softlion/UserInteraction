@@ -157,7 +157,7 @@ public partial class UserInteraction
     {
         private string? title, body;
 
-        public UIAlertView? Dialog { get; set; }
+        public UIAlertController? Dialog { get; set; }
 
         public WaitIndicatorImpl(CancellationToken userDismissedToken)
         {
@@ -177,50 +177,61 @@ public partial class UserInteraction
     /// <param name="displayAfterSeconds">delay show. Can be cancelled before it is displayed.</param>
     /// <param name="userCanDismiss">Enable tap to dismiss</param>
     /// <returns>CancellationToken is cancelled if the indicator is dismissed by the user (if userCanDismiss is true)</returns>
-    internal static IWaitIndicator PlatformWaitIndicator(CancellationToken dismiss, string? message = null, string? title=null, int? displayAfterSeconds = null, bool userCanDismiss = true)
+    /// <remarks>
+    /// This should block the UI if userCanDismiss is false
+    /// </remarks>
+    static IWaitIndicator PlatformWaitIndicator(CancellationToken dismiss, string? message = null, string? title=null, int? displayAfterSeconds = null, bool userCanDismiss = true)
     {
-        var cancellationTokenSource = new CancellationTokenSource();
-        var wi = new WaitIndicatorImpl(cancellationTokenSource.Token)
+        var userDismissed = new CancellationTokenSource();
+        var wi = new WaitIndicatorImpl(userDismissed.Token)
         {
             Title = title,
             Body = message
         };
-
-        //var currentView = Mvx.Resolve<IMvxAndroidCurrentTopActivity>();
-
-        Task.Delay((displayAfterSeconds ?? 0)*1000, dismiss).ContinueWith(t => UIApplication.SharedApplication.InvokeOnMainThread(() =>
+        
+        if(displayAfterSeconds is null or 0)
+            Do();
+        else
         {
-            var input = new UIAlertView { Title = wi.Title ?? string.Empty, Message = wi.Body ?? string.Empty };
-            wi.Dialog = input;
-                
-            //Adding an indicator by either of these 2 methods won't work. Why ?
-
-            //var indicator = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.WhiteLarge);
-            //input.Add(indicator);
-
-            //var indicator = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.WhiteLarge) { TranslatesAutoresizingMaskIntoConstraints = false };
-            //input.Add(indicator);
-            //input.AddConstraint(NSLayoutConstraint.Create(indicator, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, input, NSLayoutAttribute.CenterX, 1, 0));
-            ////input.AddConstraint(NSLayoutConstraint.Create(indicator, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, input, NSLayoutAttribute.CenterY, 1, 0));
-            //input.AddConstraint(NSLayoutConstraint.Create(indicator, NSLayoutAttribute.Width, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, 50));
-            //input.AddConstraint(NSLayoutConstraint.Create(indicator, NSLayoutAttribute.Height, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, 50));
-
-            if(userCanDismiss)
-                input.Clicked += (s,e) => cancellationTokenSource.Cancel();
-
-            input.BackgroundColor = UIColor.FromWhiteAlpha(0, 0);
-            input.Show();
-
-            dismiss.Register(() => UIApplication.SharedApplication.InvokeOnMainThread(() => input.DismissWithClickedButtonIndex(0, true)), true);
-
-            //TODO: dismiss if app goes into background mode
-            //NSNotificationCenter.UIApplicationDidEnterBackgroundNotification
-        }), TaskContinuationOptions.NotOnCanceled);
-
+            try
+            {
+                Task.Delay(displayAfterSeconds.Value*1000, dismiss).ContinueWith(_ => Do(), TaskContinuationOptions.OnlyOnRanToCompletion);
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        }
+        
         return wi;
+
+        void Do()
+        {
+            UIApplication.SharedApplication.InvokeOnMainThread(() =>
+            {
+                var alert = UIAlertController.Create(title ?? string.Empty, message, UIAlertControllerStyle.Alert);
+                wi.Dialog = alert;
+                if (userCanDismiss)
+                    alert.AddAction(UIAlertAction.Create("X", UIAlertActionStyle.Cancel, _ => userDismissed.Cancel()));
+
+                dismiss.Register(() => UIApplication.SharedApplication.InvokeOnMainThread(() =>
+                {
+                    if(alert.ParentViewController != null)
+                        alert.DismissViewController(true, null);
+                }), true);
+
+                var presentingVc = Platform.GetCurrentUIViewController();
+                if (presentingVc != null)
+                    UIApplication.SharedApplication.InvokeOnMainThread(() =>
+                    {
+                        presentingVc.PresentViewController(alert, true, null);
+                    });
+                else
+                    Log?.LogWarning("Input: no window/nav controller on which to display");
+            });
+        }
     }
 
-    internal static Task PlatformActivityIndicator(CancellationToken dismiss, double? apparitionDelay = null, uint? argbColor = null)
+    static Task PlatformActivityIndicator(CancellationToken dismiss, double? apparitionDelay = null, uint? argbColor = null)
     {
         var presentingVc = Platform.GetCurrentUIViewController();
         if (presentingVc == null)
