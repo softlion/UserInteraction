@@ -215,8 +215,7 @@ public partial class UserInteraction
 
                 dismiss.Register(() => UIApplication.SharedApplication.InvokeOnMainThread(() =>
                 {
-                    if(alert.ParentViewController != null)
-                        alert.DismissViewController(true, null);
+                    alert.DismissViewController(true, null);
                 }), true);
 
                 var presentingVc = Platform.GetCurrentUIViewController();
