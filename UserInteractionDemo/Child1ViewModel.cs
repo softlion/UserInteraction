@@ -3,7 +3,7 @@ using Vapolia.UserInteraction;
 
 namespace UserInteractionDemo;
 
-public class MainViewModel
+public class Child1ViewModel
 {
     public ICommand AlertCommand { get; }
     public ICommand MenuCommand { get; }
@@ -11,9 +11,8 @@ public class MainViewModel
     public ICommand ConfirmCommand { get; }
     public ICommand Confirm3Command { get; }
     public ICommand WaitIndicatorCommand { get; }
-    public ICommand GoToChild1Command { get; }
 
-    public MainViewModel()
+    public Child1ViewModel()
     {
         AlertCommand = new Command(async () =>
         {
@@ -72,11 +71,6 @@ public class MainViewModel
             await Task.Delay(1000);
 
             dismiss.Cancel();
-        });
-
-        GoToChild1Command = new Command(async () =>
-        {
-            await Shell.Current.GoToAsync("Child1Page");
         });
     }
 }

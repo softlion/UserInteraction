@@ -22,6 +22,19 @@ using ProgressBar = Android.Widget.ProgressBar;
 
 namespace Vapolia.UserInteraction;
 
+
+public static class Constants
+{
+	public static Microsoft.Maui.Graphics.Color?[] ToastStyleBackgroundTint =
+	{
+		null,
+		null,
+		null,
+		Colors.Orange,
+		Colors.Red, 
+	};
+}
+
 public partial class UserInteraction
 {
 	/// <summary>
@@ -262,7 +275,7 @@ public partial class UserInteraction
 		}
 	}
 
-	internal static IWaitIndicator PlatformWaitIndicator(CancellationToken dismiss, string? message, string? title, int? displayAfterSeconds, bool userCanDismiss)
+	static IWaitIndicator PlatformWaitIndicator(CancellationToken dismiss, string? message, string? title, int? displayAfterSeconds, bool userCanDismiss)
 	{
 		var cancellationTokenSource = new CancellationTokenSource();
 		var wi = new WaitIndicatorImpl(cancellationTokenSource.Token)
@@ -270,8 +283,23 @@ public partial class UserInteraction
 			Title = title,
 			Body = message
 		};
+		
+		if(displayAfterSeconds is null or 0)
+			Do();
+		else
+		{
+			try
+			{
+				Task.Delay(displayAfterSeconds.Value*1000, dismiss).ContinueWith(_ => Do(), TaskContinuationOptions.OnlyOnRanToCompletion);
+			}
+			catch (TaskCanceledException)
+			{
+			}
+		}
 
-		Task.Delay((displayAfterSeconds ?? 0)*1000, dismiss).ContinueWith(t =>
+		return wi;
+
+		void Do()
 		{
 			var activity = CurrentActivity;
 
@@ -285,11 +313,15 @@ public partial class UserInteraction
 
 				var dialog = new MaterialAlertDialogBuilder(activity)
 					.SetTitle(wi.Title)
-					.SetMessage(wi.Body)
-					.SetView(input)
-					.SetCancelable(userCanDismiss)
-					.SetOnCancelListener(new DialogCancelledListener(cancellationTokenSource.Cancel))
-					.Create();
+					?.SetMessage(wi.Body)
+					?.SetView(input)
+					?.SetCancelable(userCanDismiss)
+					?.SetOnCancelListener(new DialogCancelledListener(cancellationTokenSource.Cancel))
+					?.Create();
+
+				if (dialog == null)
+					throw new("UserInteraction can't create dialog, MaterialAlertDialogBuilder returned null.");
+
 				dialog.SetCanceledOnTouchOutside(userCanDismiss);
 				//dialog.CancelEvent += delegate { cancellationTokenSource.Cancel(); };
 
@@ -302,9 +334,7 @@ public partial class UserInteraction
 					activity.RunOnUiThread(dialog.Dismiss);
 				});
 			});
-		}, TaskContinuationOptions.OnlyOnRanToCompletion);
-
-		return wi;
+		}
 	}
 
 	class DialogDismissListener : Java.Lang.Object, IDialogInterfaceOnDismissListener
@@ -318,7 +348,7 @@ public partial class UserInteraction
 			=> onDismiss();
 	}
 
-	internal static Task PlatformActivityIndicator(CancellationToken dismiss, double? apparitionDelay, uint? argbColor)
+	static Task PlatformActivityIndicator(CancellationToken dismiss, double? apparitionDelay, uint? argbColor)
 	{
 		var tcs = new TaskCompletionSource<int>();
 
@@ -509,7 +539,7 @@ public partial class UserInteraction
 
 		var activity = CurrentActivity;
 		var view = activity?.Window?.DecorView.RootView;
-		if (view != null)
+		if (activity != null && view != null)
 		{
 			activity.RunOnUiThread(() =>
 			{

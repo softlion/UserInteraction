@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:userInteractionDemo="clr-namespace:UserInteractionDemo"
-             x:Class="UserInteractionDemo.MainPage"
-             x:DataType="userInteractionDemo:MainViewModel"
+             x:Class="UserInteractionDemo.Child1Page"
+             x:DataType="userInteractionDemo:Child1ViewModel"
              Title="UserInteraction Demo">
     <ContentPage.BindingContext>
         <userInteractionDemo:MainViewModel />
@@ -40,7 +40,6 @@
                 <Button Text="Confirm" Command="{Binding ConfirmCommand}" />
                 <Button Text="Confirm 3 buttons" Command="{Binding Confirm3Command}" />
                 <Button Text="Wait indicator" Command="{Binding WaitIndicatorCommand}" />
-                <Button Text="Try from child page" Command="{Binding GoToChild1Command}" />
             </StackLayout>
         </ScrollView>
     </Grid>
