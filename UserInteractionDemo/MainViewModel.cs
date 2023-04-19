@@ -10,6 +10,7 @@ public class MainViewModel
     public ICommand ToastCommand { get; }
     public ICommand ConfirmCommand { get; }
     public ICommand Confirm3Command { get; }
+    public ICommand WaitIndicatorCommand { get; }
 
     public MainViewModel()
     {
@@ -56,6 +57,20 @@ public class MainViewModel
                 _ => throw new NotSupportedException()
             };
             await UserInteraction.Toast(text, ToastStyle.Notice);
+        });
+
+        WaitIndicatorCommand = new Command(async () =>
+        {
+            var dismiss = new CancellationTokenSource();
+            var wi = UserInteraction.WaitIndicator(dismiss.Token, "Wait 3 seconds", displayAfterSeconds: 0, userCanDismiss: false);
+
+            await Task.Delay(1000);
+            wi.Body = "Wait 2 seconds";
+            await Task.Delay(1000);
+            wi.Body = "Wait 1 second";
+            await Task.Delay(1000);
+
+            dismiss.Cancel();
         });
     }
 }
