@@ -2,7 +2,11 @@
 
   <PropertyGroup>
 <!--    <TargetFrameworks>Xamarin.iOS10;MonoAndroid10.0;</TargetFrameworks>-->
-    <TargetFrameworks>netstandard2.1;net7.0-android;net7.0-ios;Xamarin.iOS10</TargetFrameworks>
+    <!--
+    When Xamarin.iOS10 is enabled: 
+    Error MSB3644 : The reference assemblies for framework “Xamarin.iOS,Version=v1.0” were not found
+    -->
+    <TargetFrameworks>netstandard2.1;net7.0-android;net7.0-ios</TargetFrameworks>
     <AssemblyName>Vapolia.UserInteraction</AssemblyName>
     <RootNamespace>Vapolia.UserInteraction</RootNamespace>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
@@ -42,6 +46,7 @@
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
     <PackageReference Include="Cirrious.FluentLayout" Version="3.0.0"  />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
   </ItemGroup>
 
   <!--  nuget configurable properties -->

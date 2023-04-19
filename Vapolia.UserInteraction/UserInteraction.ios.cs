@@ -252,7 +252,7 @@ public partial class UserInteraction
 
                     var waitView = new UIView {Alpha = 0};
                     var overlay = new UIView {BackgroundColor = UIColor.White, Alpha = 0.7f};
-                    var indicator = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.WhiteLarge) {HidesWhenStopped = true};
+                    var indicator = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Large) {HidesWhenStopped = true};
                     if (argbColor.HasValue || defaultColor != null)
                         indicator.Color = argbColor.HasValue ? FromArgb(argbColor.Value) : defaultColor;
 
