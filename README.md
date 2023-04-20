@@ -3,7 +3,7 @@
 Compatibility: Android, iOS, Maui, Xamarin
 
 Nuget (both Xamarin and Maui)
-[![NuGet Maui](https://img.shields.io/nuget/v/Vapolia.UserInteraction.Maui.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction.Maui/)  
+[![NuGet Maui](https://img.shields.io/nuget/vpre/Vapolia.UserInteraction.Maui.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction.Maui/)  
 ![Nuget](https://img.shields.io/nuget/dt/Vapolia.UserInteraction.Maui)
 
 Legacy Nuget for Xamarin, not updated anymore
