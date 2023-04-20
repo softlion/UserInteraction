@@ -558,10 +558,17 @@ public partial class UserInteraction
 				if(snackBar != null)
 				{
 					var color = Constants.ToastStyleBackgroundTint[(int)style];
-					if(color != null)
-						snackBar.SetBackgroundTint(color.ToPlatform());
-					
-					var layoutParams = snackBar.View.LayoutParameters as FrameLayout.LayoutParams;
+                    if (color != null)
+                    {
+						#if MONOANDROID
+                        var platformColor = color.Value;
+                        #else
+						var platformColor = color.ToPlatform();
+						#endif
+                        snackBar.SetBackgroundTint(platformColor);
+                    }
+
+                    var layoutParams = snackBar.View.LayoutParameters as FrameLayout.LayoutParams;
 					if (layoutParams != null)
 					{
 						layoutParams.Gravity = position == ToastPosition.Bottom ? GravityFlags.Bottom : (position == ToastPosition.Top ? GravityFlags.Top : GravityFlags.CenterVertical);
