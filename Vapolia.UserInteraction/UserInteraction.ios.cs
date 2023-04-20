@@ -4,6 +4,7 @@ using UIKit;
 using Microsoft.Extensions.Logging;
 #if XAMARINIOS
 using Cirrious.FluentLayouts.Touch;
+using Xamarin.Essentials;
 #else
 using Vapolia.FluentLayouts;
 #endif
