@@ -16,22 +16,32 @@ using AndroidX.Core.OS;
 using Activity = Android.App.Activity;
 using AndroidX.AppCompat.App;
 using Google.Android.Material.Snackbar;
-using Microsoft.Maui.Platform;
-using Color = Android.Graphics.Color;
 using ProgressBar = Android.Widget.ProgressBar;
+#if MONOANDROID
+using Color = Android.Graphics.Color;
+using AlertDialog = AndroidX.AppCompat.App.AlertDialog;
+using Platform = Xamarin.Essentials.Platform;
+#else
+using Microsoft.Maui.Platform;
+#endif
 
 namespace Vapolia.UserInteraction;
 
 
 public static class Constants
 {
-	public static Microsoft.Maui.Graphics.Color?[] ToastStyleBackgroundTint =
+	public static Color?[] ToastStyleBackgroundTint =
 	{
 		null,
 		null,
 		null,
+#if MONOANDROID
+		Color.Orange, 
+		Color.Red
+#else
 		Colors.Orange,
 		Colors.Red, 
+#endif
 	};
 }
 
@@ -370,7 +380,7 @@ public partial class UserInteraction
 						.SetOnDismissListener(new DialogDismissListener(() => tcs.TrySetResult(0)));
 
 					//Make translucent. ThemeTranslucentNoTitleBarFullScreen does not work on wiko.
-					builder.SetBackground(new ColorDrawable(Color.Argb(175,255,255,255))); 
+					builder.SetBackground(new ColorDrawable(Android.Graphics.Color.Argb(175,255,255,255))); 
 					var dialog = builder.Show();
 
 					dismiss.Register(() =>
@@ -548,10 +558,17 @@ public partial class UserInteraction
 				if(snackBar != null)
 				{
 					var color = Constants.ToastStyleBackgroundTint[(int)style];
-					if(color != null)
-						snackBar.SetBackgroundTint(color.ToPlatform());
-					
-					var layoutParams = snackBar.View.LayoutParameters as FrameLayout.LayoutParams;
+                    if (color != null)
+                    {
+						#if MONOANDROID
+                        var platformColor = color.Value;
+                        #else
+						var platformColor = color.ToPlatform();
+						#endif
+                        snackBar.SetBackgroundTint(platformColor);
+                    }
+
+                    var layoutParams = snackBar.View.LayoutParameters as FrameLayout.LayoutParams;
 					if (layoutParams != null)
 					{
 						layoutParams.Gravity = position == ToastPosition.Bottom ? GravityFlags.Bottom : (position == ToastPosition.Top ? GravityFlags.Top : GravityFlags.CenterVertical);

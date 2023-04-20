@@ -2,8 +2,12 @@ using CoreGraphics;
 using System.Text.RegularExpressions;
 using UIKit;
 using Microsoft.Extensions.Logging;
+#if XAMARINIOS
+using Cirrious.FluentLayouts.Touch;
+using Xamarin.Essentials;
+#else
 using Vapolia.FluentLayouts;
-
+#endif
 
 namespace Vapolia.UserInteraction;
 

@@ -1,12 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Xamarin.Legacy.Sdk/0.2.0-alpha4">
 
   <PropertyGroup>
-<!--    <TargetFrameworks>Xamarin.iOS10;MonoAndroid10.0;</TargetFrameworks>-->
-    <!--
-    When Xamarin.iOS10 is enabled: 
-    Error MSB3644 : The reference assemblies for framework “Xamarin.iOS,Version=v1.0” were not found
-    -->
-    <TargetFrameworks>netstandard2.1;net7.0-android;net7.0-ios</TargetFrameworks>
+    <TargetFrameworks>Xamarin.iOS10;MonoAndroid10.0;netstandard2.1;net7.0-android;net7.0-ios</TargetFrameworks>
     <AssemblyName>Vapolia.UserInteraction</AssemblyName>
     <RootNamespace>Vapolia.UserInteraction</RootNamespace>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
@@ -47,7 +42,14 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
     <PackageReference Include="Cirrious.FluentLayout" Version="3.0.0"  />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
   </ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid10'))">
+		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
+	</ItemGroup>
 
   <!--  nuget configurable properties -->
   <PropertyGroup>
