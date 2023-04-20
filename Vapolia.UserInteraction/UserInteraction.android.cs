@@ -20,6 +20,7 @@ using ProgressBar = Android.Widget.ProgressBar;
 #if MONOANDROID
 using Color = Android.Graphics.Color;
 using AlertDialog = AndroidX.AppCompat.App.AlertDialog;
+using Platform = Xamarin.Essentials.Platform;
 #else
 using Microsoft.Maui.Platform;
 #endif
