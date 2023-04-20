@@ -1,14 +1,12 @@
-# User Interaction for Maui
+# User Interaction for Maui and Xamarin
 
-Compatibility: Android, iOS
+Compatibility: Android, iOS, Maui, Xamarin
 
-All features are static async and uses Xamarin.Essentials to get the display context.
-
-Maui  
+Nuget (both Xamarin and Maui)
 [![NuGet Maui](https://img.shields.io/nuget/v/Vapolia.UserInteraction.Maui.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction.Maui/)  
 ![Nuget](https://img.shields.io/nuget/dt/Vapolia.UserInteraction.Maui)
 
-Xamarin  
+Legacy Nuget for Xamarin, not updated anymore
 [![NuGet Xamarin](https://img.shields.io/nuget/v/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)  
 ![Nuget](https://img.shields.io/nuget/dt/Vapolia.UserInteraction)
 
@@ -129,13 +127,12 @@ This lib uses a standard `Android.Material.Dialog` that is themed by the materia
 
 Also check [this stackoverflow answer](https://stackoverflow.com/questions/52829954/materialcomponents-theme-alert-dialog-buttons/59110804#59110804) for a sample.
 
-### Xamarin Forms
+### Maui / Xamarin Forms
 
-To get the tapped item's rectangle on Xamarin Forms, use [this gist](https://gist.github.com/softlion/5a845180c51b90c8624187273cef9193)
+To get the tapped item's rectangle, use [this gist](https://gist.github.com/softlion/5a845180c51b90c8624187273cef9193)
 
 ## About
 
 License: MIT
 
 Enterprise support available, contact [Vapolia](https://vapolia.eu) through the live chat.
-
