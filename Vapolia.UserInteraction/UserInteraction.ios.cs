@@ -2,8 +2,11 @@ using CoreGraphics;
 using System.Text.RegularExpressions;
 using UIKit;
 using Microsoft.Extensions.Logging;
+#if XAMARINIOS
+using Cirrious.FluentLayouts.Touch;
+#else
 using Vapolia.FluentLayouts;
-
+#endif
 
 namespace Vapolia.UserInteraction;
 
