@@ -82,6 +82,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/softlion/UserInteraction</PackageProjectUrl>
     <PackageReleaseNotes>
+      4.0.0 unified version with old Xamarin
       1.0.1 replaced ios WaitIndicator from AlertView to UIAlertAction
       --- version is now 1.0.0
       4.0.1: replace android toast by a snackbar, and make its background color customizable.
