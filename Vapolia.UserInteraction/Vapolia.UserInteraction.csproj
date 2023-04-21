@@ -60,24 +60,22 @@
 
   <!--  nuget properties -->
   <PropertyGroup>
-    <PackageId>Vapolia.UserInteraction.Maui</PackageId>
+    <PackageId>Vapolia.UserInteraction</PackageId>
     <!--    <PackageIconUrl>https://github.com/softlion/XamarinFormsGesture/favicon.ico</PackageIconUrl>-->
-    <Summary>Confirm, Alert, Menu, Toast, ... for xamarin (native, forms, with any mvvm framework)</Summary>
-    <PackageTags>user interaction picker maui xamarin ios android forms</PackageTags>
-    <Title>A 'UserInteraction' plugin for xamarin with Confirm, Alert, Menu, Toast, ActivityIndicator, ...</Title>
+    <Summary>Confirm, Alert, Menu, Toast, ... for maui and xamarin</Summary>
+    <PackageTags>user interaction picker popup toast menu maui xamarin ios android forms</PackageTags>
+    <Title>The best user interaction plugin for xamarin with  Bottom Menu, Confirm, Alert, Toast, Wait inditacor, Activity indicator, ...</Title>
     <Description>
-      Content: Confirm, Alert, Menu, Toast, ActivityIndicator, Input, ...
-
-      Work out of the box on xamarin native, xamarin forms, and with any mvvm framework.
+      Content: Menu, WaitIndicator, Confirm, Confirm3Buttons, Alert, Toast, ActivityIndicator, Input, ...
     </Description>
-    <PackageLicenseUrl>https://vapolia.eu</PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/softlion/UserInteraction</PackageLicenseUrl>
     <PackageVersion>$(Version)$(VersionSuffix)</PackageVersion>
     <Product>UserInteraction</Product>
     <Company>Vapolia</Company>
     <Authors>Benjamin Mayrargue</Authors>
     <Owners>https://vapolia.eu</Owners>
     <NeutralLanguage>en</NeutralLanguage>
-    <Copyright>© 2016-2021 Vapolia</Copyright>
+    <Copyright>© 2016-2023 Vapolia</Copyright>
     <RepositoryUrl>https://github.com/softlion/UserInteraction</RepositoryUrl>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <!--    <PackageLicenseFile>LICENSE</PackageLicenseFile>-->
