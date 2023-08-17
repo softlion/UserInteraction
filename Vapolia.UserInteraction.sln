@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30523.141
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C6C2BCE6-73AC-4EDC-A08D-B12B2FF434CB}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,7 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapolia.UserInteraction", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{40F36E27-C135-4B79-BD8F-D50F04E380DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInteractionDemo", "UserInteractionDemo\UserInteractionDemo.csproj", "{8FB47016-57CD-44DA-B08C-E21B2E1B7F91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserInteractionDemo", "UserInteractionDemo\UserInteractionDemo.csproj", "{8FB47016-57CD-44DA-B08C-E21B2E1B7F91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +38,7 @@ Global
 		{77F548F2-9BA8-4EAE-864A-5FA4F7DAE547}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{8FB47016-57CD-44DA-B08C-E21B2E1B7F91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8FB47016-57CD-44DA-B08C-E21B2E1B7F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FB47016-57CD-44DA-B08C-E21B2E1B7F91}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{8FB47016-57CD-44DA-B08C-E21B2E1B7F91}.Debug|iPhone.ActiveCfg = Debug|Any CPU
 		{8FB47016-57CD-44DA-B08C-E21B2E1B7F91}.Debug|iPhone.Build.0 = Debug|Any CPU
 		{8FB47016-57CD-44DA-B08C-E21B2E1B7F91}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU

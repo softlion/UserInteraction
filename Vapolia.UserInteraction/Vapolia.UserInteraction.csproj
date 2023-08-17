@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Xamarin.Legacy.Sdk/0.2.0-alpha4">
 
   <PropertyGroup>
-    <TargetFrameworks>Xamarin.iOS10;MonoAndroid10.0;netstandard2.1;net7.0-android;net7.0-ios</TargetFrameworks>
+	<TargetFrameworks>Xamarin.iOS10;MonoAndroid13.0;netstandard2.1;net7.0-android;net7.0-ios</TargetFrameworks>
+	<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
     <AssemblyName>Vapolia.UserInteraction</AssemblyName>
     <RootNamespace>Vapolia.UserInteraction</RootNamespace>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
@@ -13,6 +14,8 @@
     
     <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-android'">26.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +26,7 @@
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
     <Compile Include="**\*.netstandard.cs" />
     <Compile Include="**\*.netstandard.*.cs" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) or $(TargetFramework.StartsWith('net7.0-android'))">
@@ -36,20 +39,30 @@
     <Compile Include="**\*.ios.*.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+    <Compile Include="**\*.windows.cs" />
+    <Compile Include="**\*.windows.*.cs" />
+  </ItemGroup>
+
   <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-ios'))">
-    <PackageReference Include="Vapolia.FluentLayouts" Version="1.0.0-ci2480247012"  />
+    <PackageReference Include="Vapolia.FluentLayouts" Version="1.0.0-ci2480247012" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
-    <PackageReference Include="Cirrious.FluentLayout" Version="3.0.0"  />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
+    <PackageReference Include="Cirrious.FluentLayout" Version="3.0.0" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2612" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.8.0" />
   </ItemGroup>
-	<ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid10'))">
-		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
-	</ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
+	<PackageReference Include="Xamarin.Forms" Version="5.0.0.2612" />
+	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+	<PackageReference Include="Xamarin.Essentials" Version="1.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../LICENSE" Pack="true" PackagePath="" />
+    <None Include="../README.MD" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <!--  nuget configurable properties -->
   <PropertyGroup>
