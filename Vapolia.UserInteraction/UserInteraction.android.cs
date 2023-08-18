@@ -6,6 +6,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Text.Method;
+using AndroidX.Annotations;
 using Google.Android.Material.Dialog;
 using Java.Lang;
 using Microsoft.Extensions.Logging;
@@ -132,12 +133,13 @@ public partial class UserInteraction
 		{
 			activity.RunOnUiThread(() =>
 			{
-				var dialog = new MaterialAlertDialogBuilder(activity)
+				//Crashes on Xamarin Forms Android ?
+				new MaterialAlertDialogBuilder(activity)
 					.SetMessage(message)
 					.SetTitle(title)
 					.SetOnCancelListener(new DialogCancelledListener(() => tcs.TrySetResult(false)))
-					.SetPositiveButton(okButton, (_,_) => tcs.TrySetResult(true));
-				dialog.Show();
+					.SetPositiveButton(okButton, (_,_) => tcs.TrySetResult(true))
+					.Show();
 			});
 		}
 		else

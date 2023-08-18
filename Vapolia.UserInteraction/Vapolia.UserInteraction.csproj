@@ -12,8 +12,8 @@
 <!--    <SingleProject>true</SingleProject>-->
     <ImplicitUsings>enable</ImplicitUsings>
     
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-ios'">15.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-android'">26.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
@@ -29,12 +29,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) or $(TargetFramework.StartsWith('net7.0-android'))">
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
     <Compile Include="**\*.android.cs" />
     <Compile Include="**\*.android.*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) or $(TargetFramework.StartsWith('net7.0-ios')) ">
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' ">
     <Compile Include="**\*.ios.cs" />
     <Compile Include="**\*.ios.*.cs" />
   </ItemGroup>
@@ -44,7 +44,7 @@
     <Compile Include="**\*.windows.*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-ios'))">
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
     <PackageReference Include="Vapolia.FluentLayouts" Version="1.0.0-ci2480247012" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
@@ -56,7 +56,8 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
 	<PackageReference Include="Xamarin.Forms" Version="5.0.0.2612" />
 	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
-	<PackageReference Include="Xamarin.Essentials" Version="1.8.0" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.8.0" />
+    <PackageReference Include="Xamarin.Google.Android.Material" Version="1.9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
