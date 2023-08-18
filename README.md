@@ -112,6 +112,11 @@ On Android only, add `colorSurface` to your application's style:
   </style>
 ```
 
+Also make sure your MainTheme.Base has a parent which is material components:
+```xml
+ <style name="MainTheme.Base" parent="Theme.MaterialComponents.Light.DarkActionBar">
+```
+
 ### Theme
 
 #### iOS
