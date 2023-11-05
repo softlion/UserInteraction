@@ -16,7 +16,10 @@ using String = System.String;
 using AndroidX.Core.OS;
 using Activity = Android.App.Activity;
 using AndroidX.AppCompat.App;
+using Google.Android.Material.DatePicker;
 using Google.Android.Material.Snackbar;
+using Google.Android.Material.TextField;
+using ActionMenuView = AndroidX.AppCompat.Widget.ActionMenuView;
 using ProgressBar = Android.Widget.ProgressBar;
 #if MONOANDROID
 using Color = Android.Graphics.Color;
@@ -160,7 +163,7 @@ public partial class UserInteraction
 		{
 			activity.RunOnUiThread(() =>
 			{
-				var input = new EditText(activity) {Hint = placeholder, Text = defaultValue };
+				var input = new TextInputEditText(activity) {Hint = placeholder, Text = defaultValue };
 				if (fieldType == FieldType.Email)
 					input.InputType = InputTypes.ClassText | InputTypes.TextVariationEmailAddress;
 				else if (fieldType == FieldType.Integer)
@@ -187,10 +190,18 @@ public partial class UserInteraction
 					input.SetFilters(filters.ToArray());
 				}
 
+				var layoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+				layoutParameters.SetMargins(DpToPixel(20),0,DpToPixel(20),0);
+				input.LayoutParameters = layoutParameters;
+
+				//var layout = new TextInputLayout(activity) { LayoutParameters = layoutParameters };
+                //layout.AddView(input);
+                var layout = input;
+
 				var dialog = new MaterialAlertDialogBuilder(activity)
 					.SetMessage(message)
 					.SetTitle(title)
-					.SetView(input)
+					.SetView(layout)
 					.SetCancelable(false)
 					.SetPositiveButton(okButton, (_,_) => tcs.TrySetResult(input.Text))
 					.SetNegativeButton(cancelButton, (_,_) => tcs.TrySetResult(null))
@@ -209,9 +220,7 @@ public partial class UserInteraction
 				}
 
 				if (selectContent && !String.IsNullOrWhiteSpace(defaultValue))
-				{
 					input.RequestFocus();
-				}
 
 				dialog.Show();
 

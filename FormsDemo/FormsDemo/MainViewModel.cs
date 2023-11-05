@@ -15,6 +15,7 @@ public class MainViewModel
     public ICommand ConfirmCommand { get; }
     public ICommand Confirm3Command { get; }
     public ICommand WaitIndicatorCommand { get; }
+    public ICommand SimpleInputCommand { get; }
     public ICommand GoToChild1Command { get; }
 
     public MainViewModel()
@@ -76,6 +77,12 @@ public class MainViewModel
             await Task.Delay(1000);
 
             dismiss.Cancel();
+        });
+
+        SimpleInputCommand = new Command(async () =>
+        {
+            var result = await UserInteraction.Input("Enter your name", null, "Your name", "Registration Demo", "OK", "Cancel");
+            await UserInteraction.Alert($"You entered: {result}");
         });
 
         GoToChild1Command = new Command(async () =>

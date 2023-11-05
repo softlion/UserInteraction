@@ -39,6 +39,7 @@
                 <Button Text="Confirm" Command="{Binding ConfirmCommand}" />
                 <Button Text="Confirm 3 buttons" Command="{Binding Confirm3Command}" />
                 <Button Text="Wait indicator" Command="{Binding WaitIndicatorCommand}" />
+                <Button Text="Simple Input" Command="{Binding SimpleInputCommand}" />
                 <Button Text="Try from child page" Command="{Binding GoToChild1Command}" />
             </StackLayout>
         </ScrollView>
