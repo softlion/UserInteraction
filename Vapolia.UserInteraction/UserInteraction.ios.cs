@@ -17,6 +17,23 @@ public partial class UserInteraction
 
     internal static uint PlatformDefaultColor { set => defaultColor = FromArgb(value); }
 
+    private static UIViewController? CurrentViewController()
+    {
+        try
+        {
+            var uiViewController = Platform.GetCurrentUIViewController();
+            if(uiViewController != null)
+                return uiViewController;
+        }
+        catch (NullReferenceException)
+        {
+        }
+
+        Log?.LogWarning("Input: no window/nav controller on which to display");
+        return null;
+    }
+    
+    
     static UIColor FromArgb(uint value)
         => new UIColor((value >> 16 & 0xff)/255f, (value >> 8 & 0xff)/255f, (value & 0xff)/255f, (value >> 24 & 0xff)/255f);
 
@@ -139,7 +156,7 @@ public partial class UserInteraction
         }
 
             
-        var presentingVc = Platform.GetCurrentUIViewController();
+        var presentingVc = CurrentViewController();
         if (presentingVc != null)
         {
             UIApplication.SharedApplication.InvokeOnMainThread(() =>
@@ -151,8 +168,6 @@ public partial class UserInteraction
                 presentingVc.PresentViewController(alert, true, null);
             });
         }
-        else
-            Log?.LogWarning("Input: no window/nav controller on which to display");
 
         return tcs.Task;
     }
@@ -222,26 +237,21 @@ public partial class UserInteraction
                     alert.DismissViewController(true, null);
                 }), true);
 
-                var presentingVc = Platform.GetCurrentUIViewController();
+                var presentingVc = CurrentViewController();
                 if (presentingVc != null)
                     UIApplication.SharedApplication.InvokeOnMainThread(() =>
                     {
                         presentingVc.PresentViewController(alert, true, null);
                     });
-                else
-                    Log?.LogWarning("Input: no window/nav controller on which to display");
             });
         }
     }
 
     static Task PlatformActivityIndicator(CancellationToken dismiss, double? apparitionDelay = null, uint? argbColor = null)
     {
-        var presentingVc = Platform.GetCurrentUIViewController();
+        var presentingVc = CurrentViewController();
         if (presentingVc == null)
-        {
-            Log?.LogWarning("UserInteraction.ActivityIndicator: no window on which to display");
             return Task.CompletedTask;
-        }
 
         var tcs = new TaskCompletionSource<int>();
 
@@ -329,12 +339,9 @@ public partial class UserInteraction
         System.Drawing.RectangleF? position = null,
         string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
     {
-        var presentingVc = Platform.GetCurrentUIViewController();
+        var presentingVc = CurrentViewController();
         if (presentingVc == null)
-        {
-            Log?.LogWarning("UserInteraction.Menu: no window on which to display");
             return Task.FromResult(0);
-        }
 
         var tcs = new TaskCompletionSource<int>();
 
@@ -393,12 +400,9 @@ public partial class UserInteraction
 
     internal static Task PlatformToast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null)
     {
-        var presentingVc = Platform.GetCurrentUIViewController();
+        var presentingVc = CurrentViewController();
         if (presentingVc == null)
-        {
-            Log?.LogWarning("UserInteraction.Toast: no window on which to display");
             return Task.CompletedTask;
-        }
 
         var tcs = new TaskCompletionSource<int>();
 
