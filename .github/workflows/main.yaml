@@ -32,10 +32,11 @@ jobs:
 #      - name: Install MAUI workload
 #        run: dotnet workload install maui
 
-#      - uses: actions/setup-java@v2
-#        with:
-#          distribution: 'microsoft'
-#          java-version: '17'
+#    fixes error XA0031: Java SDK 11.0 or above is required when using $(TargetFrameworkVersion) v13.0. [D:\a\UserInteraction\UserInteraction\Vapolia.UserInteraction\Vapolia.UserInteraction.csproj::TargetFramework=MonoAndroid13.0]
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
         
       - name: Build
         run: dotnet build -c Release Vapolia.UserInteraction\Vapolia.UserInteraction.csproj
