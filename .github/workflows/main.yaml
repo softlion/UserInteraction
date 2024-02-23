@@ -18,19 +18,28 @@ jobs:
 #      CODESIGN_PFX: ${{ secrets.CODESIGN_PFX }}
     steps:
       - uses: actions/checkout@v3
+        
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
+          
       - name: Setup NuGet
         uses: nuget/setup-nuget@v1
         with:
           nuget-api-key: ${{ secrets.NuGetAPIKey }}
           nuget-version: latest
-      - name: Install MAUI workload
-        run: dotnet workload install maui
+#      - name: Install MAUI workload
+#        run: dotnet workload install maui
+
+#      - uses: actions/setup-java@v2
+#        with:
+#          distribution: 'microsoft'
+#          java-version: '17'
+        
       - name: Build
         run: dotnet build -c Release Vapolia.UserInteraction\Vapolia.UserInteraction.csproj
+        
       - name: Package NuGets
         shell: pwsh
         run: |
@@ -67,6 +76,6 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
       - name: Push to nuget
         run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NuGetAPIKey }}
