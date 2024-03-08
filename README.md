@@ -62,10 +62,23 @@ UIAlertController on iOS. MaterialAlertDialog on android.
 ```csharp
 Task<int> Menu(CancellationToken dismiss, bool userCanDismiss, string? title, string description, int defaultActionIndex, string cancelButton, string destroyButton, params string[] otherButtons);
 Task<int> Menu(CancellationToken dismiss, bool userCanDismiss, string? title, string cancelButton, string? destroyButton, params string[] otherButtons);
+Task<int> Menu(CancellationToken dismiss, bool userCanDismiss, RectangleF? position, string? title, string description, int defaultActionIndex, string cancelButton, string destroyButton, params string[] otherButtons);
 ```
 cancel and destroy buttons are optional, and are displayed differently on iOS.  
 destroy is in red, cancel is separated from the other buttons.  
 This is the best UI practice, don't try to change it.
+
+`position` helps the menu to display around that rectangle, preferably below/right/above/left in this order. This is useful on tablets and large screens.  
+You can obtain the position of an interaction using the [Gesture](https://github.com/softlion/XamarinFormsGesture) nuget:
+
+```csharp
+new Command<PointEventArgs>(async args =>
+{
+  var model = (MyItemModel)args!.BindingContext;
+  var position = args.GetAbsoluteBounds();
+  var choice = await UserInteraction.Menu(default, true, position, "title", cancelButton: "cancel", otherButtons: [ "New", "Open" ]);
+...
+```
 
 ### Wait indicators with or without progress
 ```csharp
