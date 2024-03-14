@@ -65,8 +65,7 @@
     <PackageReference Include="Xamarin.Google.Android.Material" Version="1.9.0.3" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.10" />
   </ItemGroup>
 
   <ItemGroup>
