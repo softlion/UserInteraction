@@ -75,7 +75,7 @@ You can obtain the position of an interaction using the [Gesture](https://github
 new Command<PointEventArgs>(async args =>
 {
   var model = (MyItemModel)args!.BindingContext;
-  var position = args.GetAbsoluteBounds();
+  var position = args.GetAbsoluteBoundsF();
   var choice = await UserInteraction.Menu(default, true, position, "title", cancelButton: "cancel", otherButtons: [ "New", "Open" ]);
 ...
 ```
