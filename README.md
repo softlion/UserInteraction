@@ -69,7 +69,7 @@ destroy is in red, cancel is separated from the other buttons.
 This is the best UI practice, don't try to change it.
 
 `position` helps the menu to display around that rectangle, preferably below/right/above/left in this order. This is useful on tablets and large screens.  
-You can obtain the position of an interaction using the [Gesture](https://github.com/softlion/XamarinFormsGesture) nuget:
+You can obtain the position of an interaction using the [Gesture](https://github.com/vapolia/MauiGestures/) nuget:
 
 ```csharp
 new Command<PointEventArgs>(async args =>
