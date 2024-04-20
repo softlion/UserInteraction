@@ -35,14 +35,14 @@ public partial class UserInteraction
     
     
     static UIColor FromArgb(uint value)
-        => new UIColor((value >> 16 & 0xff)/255f, (value >> 8 & 0xff)/255f, (value & 0xff)/255f, (value >> 24 & 0xff)/255f);
+        => new ((value >> 16 & 0xff)/255f, (value >> 8 & 0xff)/255f, (value & 0xff)/255f, (value >> 24 & 0xff)/255f);
 
     internal static Task<bool> PlatformConfirm(string message, string? title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken? dismiss = null)
     {
         var tcs = new TaskCompletionSource<bool>();
         UIApplication.SharedApplication.InvokeOnMainThread(() =>
         {
-            var confirm = new UIAlertView(title ?? string.Empty, message, (IUIAlertViewDelegate?)null, cancelButton, okButton);
+            var confirm = new UIAlertView(title ?? string.Empty, message, null, cancelButton, okButton);
             confirm.Clicked += (sender, args) => tcs.TrySetResult(confirm.CancelButtonIndex != args.ButtonIndex);
             confirm.Show();
 
@@ -67,7 +67,7 @@ public partial class UserInteraction
         var tcs = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
         UIApplication.SharedApplication.InvokeOnMainThread(() =>
         {
-            var confirm = new UIAlertView(title ?? string.Empty, message, (IUIAlertViewDelegate?)null, negative, positive, neutral);
+            var confirm = new UIAlertView(title ?? string.Empty, message, null, negative, positive, neutral);
             confirm.Clicked +=
                 (sender, args) =>
                 {
@@ -89,7 +89,7 @@ public partial class UserInteraction
         var tcs = new TaskCompletionSource<bool>();
         UIApplication.SharedApplication.InvokeOnMainThread(() =>
         {
-            var alert = new UIAlertView(title ?? string.Empty, message, (IUIAlertViewDelegate?)null, okButton);
+            var alert = new UIAlertView(title ?? string.Empty, message, null, okButton);
             alert.Clicked += (sender, args) => tcs.TrySetResult(true);
             alert.Show();
         });
@@ -257,11 +257,16 @@ public partial class UserInteraction
 
         Task.Delay((int)((apparitionDelay ?? 0)*1000+.5), dismiss).ContinueWith(t =>
         {
-            if (t.IsCompleted)
+            if (!t.IsCanceled)
             {
                 UIApplication.SharedApplication.InvokeOnMainThread(() =>
                 {
                     var currentView = presentingVc?.View;
+                    if (currentView == null)
+                    {
+                        tcs.TrySetResult(0);
+                        return;
+                    }
 
                     var waitView = new UIView {Alpha = 0};
                     var overlay = new UIView {BackgroundColor = UIColor.White, Alpha = 0.7f};
@@ -271,7 +276,7 @@ public partial class UserInteraction
 
                     waitView.Add(overlay);
                     waitView.Add(indicator);
-                    currentView?.Add(waitView);
+                    currentView.Add(waitView);
 
                     waitView.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
                     waitView.AddConstraints(
@@ -287,7 +292,7 @@ public partial class UserInteraction
                     );
 
                     waitView.TranslatesAutoresizingMaskIntoConstraints = false;
-                    currentView?.AddConstraints(
+                    currentView.AddConstraints(
                         waitView.AtTopOf(currentView),
                         waitView.AtLeftOf(currentView),
                         waitView.AtRightOf(currentView),
@@ -322,7 +327,7 @@ public partial class UserInteraction
     /// </summary>
     /// <param name="dismiss"></param>
     /// <param name="userCanDismiss">NOT SUPPORTED ON IOS</param>
-    /// <param name="position">optional: position from top left of screen</param>
+    /// <param name="position">optional: position from top left of screen. Only for iPad.</param>
     /// <param name="title"></param>
     /// <param name="description">optional</param>
     /// <param name="defaultActionIndex">from 2 to 2+number of actions. Otherwise ignored.</param>
@@ -347,52 +352,65 @@ public partial class UserInteraction
 
         UIApplication.SharedApplication.InvokeOnMainThread(() =>
         {
-            var currentView = presentingVc.View!;
-
-            var alertController = UIAlertController.Create(title, description, UIAlertControllerStyle.ActionSheet);
-            alertController.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
-
-            if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
+            var currentView = presentingVc.View;
+            if (currentView == null)
             {
-                alertController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
-                var presenter = alertController.PopoverPresentationController;
-                presenter.SourceView = currentView;
-                presenter.SourceRect = position ?? new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1);
-            }
-
-            if (cancelButton != null)
-                alertController.AddAction(UIAlertAction.Create(cancelButton, UIAlertActionStyle.Cancel, action => tcs.TrySetResult(0)));
-            if (destroyButton != null)
-                alertController.AddAction(UIAlertAction.Create(destroyButton, UIAlertActionStyle.Destructive, action => tcs.TrySetResult(1)));
-
-            UIAlertAction? defaultAction = null;
-            var iAction = 2;
-            foreach (var button in otherButtons)
-            {
-                var iActionIndex = iAction++;
-                if (button != null)
-                {
-                    var alertAction = UIAlertAction.Create(button, UIAlertActionStyle.Default, action => tcs.TrySetResult(iActionIndex));
-                    alertController.AddAction(alertAction);
-                    if (defaultActionIndex == iActionIndex)
-                        defaultAction = alertAction;
-                }
-            }
-
-            alertController.PreferredAction = defaultAction;
-
-            var registration = dismiss.Register(() => UIApplication.SharedApplication.InvokeOnMainThread(() =>
-            {
-                alertController.DismissViewController(true, null);
                 tcs.TrySetResult(0);
-            }));
+                return;
+            }
 
-            // ReSharper disable once MethodSupportsCancellation
-            tcs.Task.ContinueWith(t => registration.Dispose());
+            try
+            {
+                var alertController = UIAlertController.Create(title, description, UIAlertControllerStyle.ActionSheet);
+                alertController.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
 
-            //Show from bottom
-            //actionSheet.ShowFrom(new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1), currentView, true);
-            presentingVc.PresentViewController(alertController, true, null);
+                if (UIDevice.CurrentDevice.UserInterfaceIdiom is UIUserInterfaceIdiom.Pad or UIUserInterfaceIdiom.Mac or UIUserInterfaceIdiom.TV)
+                {
+                    var presenter = alertController.PopoverPresentationController;
+                    if (presenter != null)
+                    {
+                        alertController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
+                        presenter.SourceView = currentView;
+                        presenter.SourceRect = position ?? new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1);
+                    }
+                }
+
+                if (cancelButton != null)
+                    alertController.AddAction(UIAlertAction.Create(cancelButton, UIAlertActionStyle.Cancel, action => tcs.TrySetResult(0)));
+                if (destroyButton != null)
+                    alertController.AddAction(UIAlertAction.Create(destroyButton, UIAlertActionStyle.Destructive, action => tcs.TrySetResult(1)));
+
+                UIAlertAction? defaultAction = null;
+                var iAction = 2;
+                foreach (var button in otherButtons)
+                {
+                    var iActionIndex = iAction++;
+                    if (button != null)
+                    {
+                        var alertAction = UIAlertAction.Create(button, UIAlertActionStyle.Default, action => tcs.TrySetResult(iActionIndex));
+                        alertController.AddAction(alertAction);
+                        if (defaultActionIndex == iActionIndex)
+                            defaultAction = alertAction;
+                    }
+                }
+
+                alertController.PreferredAction = defaultAction;
+
+                var registration = dismiss.Register(() => UIApplication.SharedApplication.InvokeOnMainThread(() => { alertController.DismissViewController(true, () => tcs.TrySetResult(0)); }));
+
+                // ReSharper disable once MethodSupportsCancellation
+                tcs.Task.ContinueWith(t => registration.Dispose());
+
+                //Show from bottom
+                //actionSheet.ShowFrom(new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1), currentView, true);
+                presentingVc.PresentViewController(alertController, true, null);
+            }
+            catch (Exception e)
+            {
+                //Should never happen. But in case that happens, don't block the caller.
+                Console.WriteLine(e);
+                tcs.TrySetResult(0);
+            }
         });
 
         return tcs.Task;
@@ -408,7 +426,12 @@ public partial class UserInteraction
 
         UIApplication.SharedApplication.InvokeOnMainThread(() =>
         {
-            var currentView = presentingVc.View!;
+            var currentView = presentingVc.View;
+            if (currentView == null)
+            {
+                tcs.TrySetResult(0);
+                return;
+            }
 
             //UI items
             var font = UIFont.SystemFontOfSize(UIFont.SmallSystemFontSize);
@@ -486,8 +509,7 @@ public partial class UserInteraction
 }
 
 /// <summary>
-/// A UILabel which automatically sets its PreferredMaxLayoutWidth to its constraint width,
-/// so it can work nicely with MvxAutolayoutTableViewSource, without additional work
+/// A UILabel which automatically sets its PreferredMaxLayoutWidth to its constraint width
 /// </summary>
 // ReSharper disable once InconsistentNaming
 internal class UILabelEx : UILabel
