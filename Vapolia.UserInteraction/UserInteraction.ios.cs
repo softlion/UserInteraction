@@ -25,8 +25,10 @@ public partial class UserInteraction
             if(uiViewController != null)
                 return uiViewController;
         }
-        catch (NullReferenceException)
+        catch (Exception e)
         {
+            Log?.LogWarning(e, "Input: no window/nav controller on which to display");
+            return null;
         }
 
         Log?.LogWarning("Input: no window/nav controller on which to display");
@@ -344,73 +346,79 @@ public partial class UserInteraction
         System.Drawing.RectangleF? position = null,
         string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
     {
-        var presentingVc = CurrentViewController();
-        if (presentingVc == null)
-            return Task.FromResult(0);
-
         var tcs = new TaskCompletionSource<int>();
 
-        UIApplication.SharedApplication.InvokeOnMainThread(() =>
+        UIApplication.SharedApplication.InvokeOnMainThread(async () =>
         {
-            var currentView = presentingVc.View;
+            var presentingVc = CurrentViewController();
+            var currentView = presentingVc?.View;
             if (currentView == null)
             {
                 tcs.TrySetResult(0);
                 return;
             }
 
-            try
+            var alertController = UIAlertController.Create(title, description, UIAlertControllerStyle.ActionSheet);
+            alertController.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
+
+            if (UIDevice.CurrentDevice.UserInterfaceIdiom is UIUserInterfaceIdiom.Pad or UIUserInterfaceIdiom.Mac or UIUserInterfaceIdiom.TV)
             {
-                var alertController = UIAlertController.Create(title, description, UIAlertControllerStyle.ActionSheet);
-                alertController.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
-
-                if (UIDevice.CurrentDevice.UserInterfaceIdiom is UIUserInterfaceIdiom.Pad or UIUserInterfaceIdiom.Mac or UIUserInterfaceIdiom.TV)
+                var presenter = alertController.PopoverPresentationController;
+                if (presenter != null)
                 {
-                    var presenter = alertController.PopoverPresentationController;
-                    if (presenter != null)
-                    {
-                        alertController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
-                        presenter.SourceView = currentView;
-                        presenter.SourceRect = position ?? new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1);
-                    }
+                    alertController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
+                    presenter.SourceView = currentView;
+                    presenter.SourceRect = position ?? new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1);
                 }
-
-                if (cancelButton != null)
-                    alertController.AddAction(UIAlertAction.Create(cancelButton, UIAlertActionStyle.Cancel, action => tcs.TrySetResult(0)));
-                if (destroyButton != null)
-                    alertController.AddAction(UIAlertAction.Create(destroyButton, UIAlertActionStyle.Destructive, action => tcs.TrySetResult(1)));
-
-                UIAlertAction? defaultAction = null;
-                var iAction = 2;
-                foreach (var button in otherButtons)
-                {
-                    var iActionIndex = iAction++;
-                    if (button != null)
-                    {
-                        var alertAction = UIAlertAction.Create(button, UIAlertActionStyle.Default, action => tcs.TrySetResult(iActionIndex));
-                        alertController.AddAction(alertAction);
-                        if (defaultActionIndex == iActionIndex)
-                            defaultAction = alertAction;
-                    }
-                }
-
-                alertController.PreferredAction = defaultAction;
-
-                var registration = dismiss.Register(() => UIApplication.SharedApplication.InvokeOnMainThread(() => { alertController.DismissViewController(true, () => tcs.TrySetResult(0)); }));
-
-                // ReSharper disable once MethodSupportsCancellation
-                tcs.Task.ContinueWith(t => registration.Dispose());
-
-                //Show from bottom
-                //actionSheet.ShowFrom(new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1), currentView, true);
-                presentingVc.PresentViewController(alertController, true, null);
             }
-            catch (Exception e)
+
+            if (cancelButton != null)
+                alertController.AddAction(UIAlertAction.Create(cancelButton, UIAlertActionStyle.Cancel, action => tcs.TrySetResult(0)));
+            if (destroyButton != null)
+                alertController.AddAction(UIAlertAction.Create(destroyButton, UIAlertActionStyle.Destructive, action => tcs.TrySetResult(1)));
+
+            UIAlertAction? defaultAction = null;
+            var iAction = 2;
+            foreach (var button in otherButtons)
             {
-                //Should never happen. But in case that happens, don't block the caller.
-                Console.WriteLine(e);
-                tcs.TrySetResult(0);
+                var iActionIndex = iAction++;
+                if (button != null)
+                {
+                    var alertAction = UIAlertAction.Create(button, UIAlertActionStyle.Default, action => tcs.TrySetResult(iActionIndex));
+                    alertController.AddAction(alertAction);
+                    if (defaultActionIndex == iActionIndex)
+                        defaultAction = alertAction;
+                }
             }
+
+            alertController.PreferredAction = defaultAction;
+
+            var registration = dismiss.Register(() =>
+            {
+                UIApplication.SharedApplication.InvokeOnMainThread(() =>
+                {
+                    alertController.DismissViewController(true, () =>
+                    {
+                        tcs.TrySetResult(0);
+                    });
+                });
+            });
+            
+            // ReSharper disable once MethodSupportsCancellation
+            tcs.Task.ContinueWith(t => registration.Dispose());
+
+            //If PresentViewController fails because presentingVc can not present our alert, this function will stay stuck forever
+            //Workaround by using a timer that cancels the menu if the alert is not displayed after 600ms,
+            //which should cover the time it take for iOS to fully display the alert.
+            var tcsAppeared = new TaskCompletionSource<bool>();
+            presentingVc.PresentViewController(alertController, true, () =>
+            {
+                tcsAppeared.TrySetResult(true);
+            });
+
+            await Task.Delay(600);
+            if (!tcsAppeared.Task.IsCompleted)
+                tcs.TrySetResult(0); //It will never appear
         });
 
         return tcs.Task;
