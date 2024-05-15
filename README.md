@@ -136,7 +136,7 @@ Also make sure your MainTheme.Base has a parent which is material components:
 set a default color for all activity indicators:
 
 ```csharp
-Vapolia.UserInteraction.DefaultColor = 0xAARRGGBB;
+global::Vapolia.UserInteraction.UserInteraction.DefaultColor = 0xAARRGGBB;
 ```
 
 #### Android
