@@ -9,6 +9,9 @@ Nuget
 
 https://user-images.githubusercontent.com/190756/233765252-7db79043-6312-4c6b-b59b-d59db1777b01.mp4
 
+Combined with MauiGestures helpers, you can easily set the menu position on tablets and desktops:
+<img width="566" height="333" alt="image" src="https://github.com/user-attachments/assets/3360f7ce-b9fe-4b5b-814d-34902c9e6112" />
+
 
 ## Usage
 
@@ -233,3 +236,4 @@ Also check [this stackoverflow answer](https://stackoverflow.com/questions/52829
 License: MIT
 
 Enterprise support available, contact [Vapolia](https://vapolia.eu) through the live chat.
+
