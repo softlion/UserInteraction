@@ -9,7 +9,7 @@ namespace Vapolia.UserInteraction;
 public static class UserInteractionMauiAppBuilderExtensions
 {
     /// <summary>
-    /// Add Maui handlers
+    /// Add Maui handlers and register IUserInteraction service for dependency injection
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="getWindow">A function that returns the current window, where to place popups</param>
@@ -19,7 +19,10 @@ public static class UserInteractionMauiAppBuilderExtensions
     {
         UserInteraction.GetWindow = getWindow;
         UserInteraction.Log = log;
-        
+
+        // Register IUserInteraction service for dependency injection
+        builder.Services.AddSingleton<IUserInteraction, UserInteractionService>();
+
         return builder;
     }
 }

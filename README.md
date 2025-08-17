@@ -1,6 +1,6 @@
 # User Interaction for Maui
 
-Compatibility: Maui, Android, iOS, MacCatalyst, Windows. 
+Platforms: Android, iOS, MacCatalyst, Windows.
 
 Nuget  
 [![NuGet](https://img.shields.io/nuget/vpre/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)  
@@ -10,45 +10,109 @@ Nuget
 https://user-images.githubusercontent.com/190756/233765252-7db79043-6312-4c6b-b59b-d59db1777b01.mp4
 
 
-## Examples
+## Usage
+
+This library provides two ways to use user interaction dialogs.  
+Static methods or dependency injection.
+
+But first you need to add a call to `.UseUserInteraction(() => Application.Current!.Windows[0])`.  
+See the setup section below for more details.
+
+
+### 1. Static Methods
 ```csharp
 //confirm
-var ok = await Vapolia.UserInteraction.Confirm("Are you sure?");
+var ok = await UserInteraction.Confirm("Are you sure?");
 
 //display a wait indicator while waiting for a long mandatory operation to complete
 var dismiss = new CancellationTokenSource();
-try 
+try
 {
-  var userCancelled = Vapolia.UserInteraction.WaitIndicator(dismiss.Token, "Please wait", "Loggin in");
+  var userCancelled = UserInteraction.WaitIndicator(dismiss.Token, "Please wait", "Loggin in");
   await Task.Delay(3000, userCancelled); //simulate a long operation
-} 
-finally 
+}
+finally
 {
   dismiss.Cancel();
 }
 
 //display an obtrusive loading indicator
 var dismiss = new CancellationTokenSource();
-try 
+try
 {
-  await Vapolia.UserInteraction.ActivityIndicator(dismiss.Token, apparitionDelay: 0.5, argbColor: (uint)0xFFFFFF);
+  await UserInteraction.ActivityIndicator(dismiss.Token, apparitionDelay: 0.5, argbColor: (uint)0xFFFFFF);
   await Task.Delay(3000); //simulate a long operation
-} 
-finally 
+}
+finally
 {
   dismiss.Cancel();
 }
 
-
 //Single choice menu with optional cancel and destroy items
 var cancel = default(CancellationToken); //you can cancel the dialog programatically.
-var menu = await ui.Menu(cancel, true, "Choose something", "Cancel", null, "item1", "item2", ...); //You can add as many items as your want
+var menu = await UserInteraction.Menu(cancel, true, "Choose something", "Cancel", null, "item1", "item2", ...); //You can add as many items as your want
 //returns:
 //0 => always cancel action (even if not displayed, ie the cancel text is null)
 //1 => always destroy action (even if not displayed, ie the destroy text is null)
 //2+ => item1, item2, ...
 if (menu >= 2)
 {
+}
+```
+
+### 2. Dependency Injection
+```csharp
+// In your view model or service, inject IUserInteraction
+public class MyViewModel
+{
+    private readonly IUserInteraction _userInteraction;
+
+    public MyViewModel(IUserInteraction userInteraction)
+    {
+        _userInteraction = userInteraction;
+    }
+
+    public async Task DoSomething()
+    {
+        // Use the injected service
+        var ok = await _userInteraction.Confirm("Are you sure?");
+
+        if (ok)
+        {
+            await _userInteraction.Toast("Action completed!");
+        }
+    }
+
+    public async Task ShowComplexExample()
+    {
+        // Show a menu with multiple options
+        var choice = await _userInteraction.Menu(
+            title: "Choose an action",
+            description: "What would you like to do?",
+            cancelButton: "Cancel",
+            destroyButton: "Delete All",
+            otherButtons: ["Edit", "Share", "Copy"]);
+
+        if (choice >= 2) // User selected an action
+        {
+            // Show wait indicator during processing
+            using var cts = new CancellationTokenSource();
+            var waitIndicator = _userInteraction.WaitIndicator(
+                cts.Token,
+                "Processing...",
+                "Please Wait");
+
+            try
+            {
+                await Task.Delay(2000); // Simulate work
+                await _userInteraction.Toast("Operation completed!", ToastStyle.Notice);
+            }
+            finally
+            {
+                cts.Cancel();
+            }
+        }
+    }
 }
 ```
 
@@ -114,6 +178,26 @@ If `selectContent` is `true` (default), the text is automatically selected, so w
 
 ### Setup
 
+Add the UserInteraction service to your MAUI app in `MauiProgram.cs`:
+
+```csharp
+public static class MauiProgram
+{
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .UseUserInteraction(() => Application.Current!.Windows[0]); // Register UserInteraction
+
+        return builder.Build();
+    }
+}
+```
+
+
+#### Android Specific Setup
+
 On Android only, add `colorSurface` to your application's style:
 
 ```xml
@@ -127,7 +211,7 @@ On Android only, add `colorSurface` to your application's style:
 
 Also make sure your MainTheme.Base has a parent which is material components:
 ```xml
- <style name="MainTheme.Base" parent="Theme.MaterialComponents.Light.DarkActionBar">
+ <style name="MainTheme.Base" parent="Theme.MaterialComponents.Light.DarkActionBar"> ...
 ```
 
 ### Theme
