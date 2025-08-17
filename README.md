@@ -1,9 +1,9 @@
-# User Interaction for Maui and Xamarin
+# User Interaction for Maui
 
-Compatibility: Maui & Xamarin. Android & iOS. 
+Compatibility: Maui, Android, iOS, MacCatalyst, Windows. 
 
-Nuget (Maui & Xamarin)  
-[![NuGet Xamarin](https://img.shields.io/nuget/vpre/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)  
+Nuget  
+[![NuGet](https://img.shields.io/nuget/vpre/Vapolia.UserInteraction.svg?style=for-the-badge)](https://www.nuget.org/packages/Vapolia.UserInteraction/)  
 ![Nuget](https://img.shields.io/nuget/dt/Vapolia.UserInteraction)
 
 

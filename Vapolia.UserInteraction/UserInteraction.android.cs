@@ -6,7 +6,6 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Text.Method;
-using AndroidX.Annotations;
 using Google.Android.Material.Dialog;
 using Java.Lang;
 using Microsoft.Extensions.Logging;
@@ -16,18 +15,10 @@ using String = System.String;
 using AndroidX.Core.OS;
 using Activity = Android.App.Activity;
 using AndroidX.AppCompat.App;
-using Google.Android.Material.DatePicker;
 using Google.Android.Material.Snackbar;
 using Google.Android.Material.TextField;
-using ActionMenuView = AndroidX.AppCompat.Widget.ActionMenuView;
 using ProgressBar = Android.Widget.ProgressBar;
-#if MONOANDROID
-using Color = Android.Graphics.Color;
-using AlertDialog = AndroidX.AppCompat.App.AlertDialog;
-using Platform = Xamarin.Essentials.Platform;
-#else
 using Microsoft.Maui.Platform;
-#endif
 
 namespace Vapolia.UserInteraction;
 
@@ -51,11 +42,6 @@ public static class Constants
 
 public partial class UserInteraction
 {
-	/// <summary>
-	/// Not used on Android. Use a theme instead.
-	/// </summary>
-	internal static uint PlatformDefaultColor { get; set; }
-        
 	private static Activity? CurrentActivity
 	{
 		get
@@ -136,7 +122,6 @@ public partial class UserInteraction
 		{
 			activity.RunOnUiThread(() =>
 			{
-				//Crashes on Xamarin Forms Android ?
 				new MaterialAlertDialogBuilder(activity)
 					.SetMessage(message)
 					.SetTitle(title)
@@ -262,7 +247,7 @@ public partial class UserInteraction
 						}
 						catch (ObjectDisposedException)
 						{
-							Log?.LogError("WaitIndicator: Title can not be set: Dialog is disposed");
+							Log?.LogWarning("WaitIndicator: Title can not be set: Dialog is disposed");
 						}
 					});
 				}
@@ -286,7 +271,7 @@ public partial class UserInteraction
 						}
 						catch (ObjectDisposedException)
 						{
-							Log?.LogError("WaitIndicator: Body can not be set: Dialog is disposed");
+							Log?.LogWarning("WaitIndicator: Body can not be set: Dialog is disposed");
 						}
 					});
 				}
@@ -407,7 +392,7 @@ public partial class UserInteraction
 								catch (Exception)
 								{
 									//Dialog dismissed
-									Log?.LogError("Exception while dismissing dialog, is the activity hidden before the dialog has been dismissed ?");
+									Log?.LogWarning("Exception while dismissing dialog, is the activity hidden before the dialog has been dismissed ?");
 								}
 							}
 						});

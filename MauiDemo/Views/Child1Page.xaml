@@ -1,0 +1,29 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mauiDemo="clr-namespace:MauiDemo"
+             x:Class="MauiDemo.Child1Page"
+             x:DataType="mauiDemo:Child1ViewModel"
+             Title="User Interaction Demo">
+    <ContentPage.BindingContext>
+        <mauiDemo:Child1ViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto, *">
+
+        <HorizontalStackLayout HorizontalOptions="Center" BackgroundColor="{StaticResource Accent}" Padding="0,20,0,20">
+            <Label Text="UserInteraction Demo" FontSize="20" />
+        </HorizontalStackLayout>
+        
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="30,24,30,24" Spacing="10">
+                <Button Text="Alert" Command="{Binding AlertCommand}" />
+                <Button Text="Menu" Command="{Binding MenuCommand}" />
+                <Button Text="Toast" Command="{Binding ToastCommand}" />
+                <Button Text="Confirm" Command="{Binding ConfirmCommand}" />
+                <Button Text="Confirm 3 buttons" Command="{Binding Confirm3Command}" />
+                <Button Text="Wait indicator" Command="{Binding WaitIndicatorCommand}" />
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+    
+</ContentPage>

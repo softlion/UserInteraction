@@ -1,23 +1,24 @@
-using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Windows.UI.Popups;
-using Button = Microsoft.UI.Xaml.Controls.Button;
-using HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment;
-using VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment;
+using Microsoft.Maui.Platform;
 using Window = Microsoft.UI.Xaml.Window;
 
 namespace Vapolia.UserInteraction;
 
 public partial class UserInteraction
 {
-    private static Color? defaultColor;
-
-    internal static uint PlatformDefaultColor { set => defaultColor = FromArgb(value); }
-
-    static Color FromArgb(uint value)
-        => new Color((value >> 16 & 0xff)/255f, (value >> 8 & 0xff)/255f, (value & 0xff)/255f, (value >> 24 & 0xff)/255f);
+    private static Microsoft.UI.Xaml.Media.Brush? PlatformDefaultColor => DefaultColor?.ToPlatform();
+    
+    private static Window? CurrentWindow
+    {
+        get
+        {
+            var window = GetWindow().Handler?.PlatformView as Window;
+            if(window == null)
+                Log?.LogWarning("UserInteraction: can't get current window, it's null.");
+            return window;
+        }
+    }
 
     internal static Task<bool> PlatformConfirm(string message, string? title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken? dismiss = null)
     {
@@ -25,7 +26,7 @@ public partial class UserInteraction
 
         /*
         var currentView = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().;
-        
+
         var xamlRoot = Windows.UI.Xaml.Hosting.ElementCompositionPreview.GetElementVisual(currentView).XamlRoot;
 
 
@@ -38,10 +39,10 @@ public partial class UserInteraction
             {
                 Title = title,
                 Content = message,
-                
+
                 CloseButtonText = cancelButton,
                 CloseButtonCommand = new Command(() => { tcs.TrySetResult(false); }),
-                
+
                 IsPrimaryButtonEnabled = true,
                 PrimaryButtonCommand = new Command(() => { tcs.TrySetResult(true); }),
                 PrimaryButtonText = okButton,
@@ -63,7 +64,7 @@ public partial class UserInteraction
                 });
                 _ = tcs.Task.ContinueWith(t => registration.Dispose());
             }
-        
+
             await confirm.ShowAsync(ContentDialogPlacement.Popup);
             var i = 0;
         });
@@ -95,18 +96,48 @@ public partial class UserInteraction
         //    return tcs.Task;
     }
 
+    /// <summary>
+    /// Shows an alert dialog with a message and a single button.
+    /// </summary>
+    /// <remarks>
+    /// Note: In WinUI 3, Microsoft.UI.Xaml.Application.Current.Windows collection doesn't exist anymore.
+    /// This is a breaking change from UWP. The proper way to get the current window in WinUI 3 is to:
+    /// 1. Use the Window.AppWindow property (Windows App SDK 1.3+)
+    /// 2. Or use WindowNative.GetWindowHandle and AppWindow.GetFromWindowId
+    /// 3. Or implement a WindowHelper class that tracks all windows in your application
+    ///
+    /// For a complete implementation, you should maintain a reference to your main window
+    /// or implement a WindowHelper class in your application.
+    /// </remarks>
     internal static Task PlatformAlert(string message, string title = "", string okButton = "OK")
     {
-        throw new NotImplementedException();
-        //var tcs = new TaskCompletionSource<bool>();
-        //MainThread.BeginInvokeOnMainThread(() =>
-        //{
-        //    var alert = new UIAlertView(title ?? string.Empty, message, (IUIAlertViewDelegate?)null, okButton);
-        //    alert.Clicked += (sender, args) => tcs.TrySetResult(true);
-        //    alert.Show();
-        //});
-        //return tcs.Task;
+        var tcs = new TaskCompletionSource();
+        MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            var currentWindow = CurrentWindow;
+            if (currentWindow == null)
+            {
+                tcs.TrySetResult();
+                return;
+            }
+
+            var dialog = new ContentDialog
+            {
+                Title = title,
+                Content = message,
+                CloseButtonText = okButton,
+                XamlRoot = currentWindow.Content.XamlRoot,
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            await dialog.ShowAsync();
+            tcs.TrySetResult();
+        });
+        
+        return tcs.Task;
     }
+
+    
 
     internal static Task<string?> PlatformInput(string message, string? defaultValue = null, string? placeholder = null, string? title = null, string okButton = "OK", string cancelButton = "Cancel", FieldType fieldType = FieldType.Default, int maxLength = 0, bool selectContent = true)
     {
@@ -169,7 +200,7 @@ public partial class UserInteraction
         //    }
         //}
 
-            
+
         //var presentingVc = Platform.GetCurrentUIViewController();
         //if (presentingVc != null)
         //{
@@ -225,7 +256,7 @@ public partial class UserInteraction
         //    Title = title,
         //    Body = message
         //};
-        
+
         //if(displayAfterSeconds is null or 0)
         //    Do();
         //else
@@ -238,7 +269,7 @@ public partial class UserInteraction
         //    {
         //    }
         //}
-        
+
         //return wi;
 
         //void Do()
@@ -336,13 +367,13 @@ public partial class UserInteraction
         //    else
         //        tcs.TrySetResult(0);
         //});
-            
+
         //return tcs.Task;
     }
 
     /// <summary>
     /// Displays a system menu.
-    /// If otherButtons is null, the indexes are still incremented, but the button won't appear. 
+    /// If otherButtons is null, the indexes are still incremented, but the button won't appear.
     /// This enables easy scenario where the otherButtons array is changing between calls.
     /// </summary>
     /// <param name="dismiss"></param>
@@ -518,4 +549,5 @@ public partial class UserInteraction
 
         //return tcs.Task;
     }
+
 }

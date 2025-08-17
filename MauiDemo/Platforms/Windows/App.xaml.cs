@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System.Diagnostics;
+using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -16,6 +17,13 @@ public partial class App : MauiWinUIApplication
     /// </summary>
     public App()
     {
+        UnhandledException += (sender, args) =>
+        {
+            //args.Handled = true;
+            Debug.WriteLine(args.Message);
+            Debug.WriteLine(args.Exception.ToString());
+        };
+
         this.InitializeComponent();
     }
 

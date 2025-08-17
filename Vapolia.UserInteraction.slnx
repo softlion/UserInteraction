@@ -1,0 +1,25 @@
+﻿<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="iPhone" />
+    <Platform Name="iPhoneSimulator" />
+  </Configurations>
+  <Folder Name="/Build/">
+    <File Path=".github\workflows\main.yaml" />
+  </Folder>
+  <Folder Name="/Demo/">
+    <Project Path="MauiDemo\MauiDemo.csproj">
+      <Configuration Solution="Debug|Any CPU" Project="Debug|Any CPU|Deploy" />
+      <Configuration Solution="Debug|iPhone" Project="Debug|Any CPU" />
+      <Configuration Solution="Debug|iPhoneSimulator" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|iPhone" Project="Release|Any CPU" />
+      <Configuration Solution="Release|iPhoneSimulator" Project="Release|Any CPU" />
+    </Project>
+  </Folder>
+  <Project Path="Vapolia.UserInteraction\Vapolia.UserInteraction.csproj">
+    <Configuration Solution="Debug|iPhone" Project="Debug|Any CPU" />
+    <Configuration Solution="Debug|iPhoneSimulator" Project="Debug|Any CPU" />
+    <Configuration Solution="Release|iPhone" Project="Release|Any CPU" />
+    <Configuration Solution="Release|iPhoneSimulator" Project="Release|Any CPU" />
+  </Project>
+</Solution>
