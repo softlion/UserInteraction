@@ -1,125 +1,94 @@
-﻿<Project Sdk="Xamarin.Legacy.Sdk/0.2.0-alpha4">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<TargetFrameworks>Xamarin.iOS10;MonoAndroid13.0;netstandard2.1;net8.0-android;net8.0-ios</TargetFrameworks>
-	<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
-    <AssemblyName>Vapolia.UserInteraction</AssemblyName>
-    <RootNamespace>Vapolia.UserInteraction</RootNamespace>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-    <UseMaui Condition="$(TargetFramework.StartsWith('net8.0-'))">true</UseMaui>
-<!--    <SingleProject>true</SingleProject>-->
-    <ImplicitUsings>enable</ImplicitUsings>
+    <Import Project="FilenameBasedMultiTargeting.props" />
     
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+        <UseMaui>true</UseMaui>
+        <SingleProject>true</SingleProject>
 
-  <ItemGroup>
-    <Compile Include="**\*.shared.cs" />
-    <Compile Include="**\*.shared.*.cs" />
-  </ItemGroup>
-  
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-    <Compile Include="**\*.netstandard.cs" />
-    <Compile Include="**\*.netstandard.*.cs" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-  </ItemGroup>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsTrimmable>true</IsTrimmable>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-    <Compile Include="**\*.android.cs" />
-    <Compile Include="**\*.android.*.cs" />
-  </ItemGroup>
+        <AssemblyName>Vapolia.UserInteraction</AssemblyName>
+        <RootNamespace>Vapolia.UserInteraction</RootNamespace>
+        
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>        
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
+    </PropertyGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' ">
-    <Compile Include="**\*.ios.cs" />
-    <Compile Include="**\*.ios.*.cs" />
-  </ItemGroup>
 
-  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-    <Compile Include="**\*.windows.cs" />
-    <Compile Include="**\*.windows.*.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.8" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="obj/**/*.cs" />
-    <Compile Remove="bin/**/*.cs" />
-  </ItemGroup>
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
+    </PropertyGroup>
 
-  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
-    <PackageReference Include="Vapolia.FluentLayouts" Version="1.0.1-ci8019072283" />
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
-    <PackageReference Include="Cirrious.FluentLayout" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
-	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
-    <PackageReference Include="Xamarin.Google.Android.Material" Version="1.8.0.1" />
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.20" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="../LICENSE.md" Pack="true" PackagePath="" />
+        <None Include="../README.md" Pack="true" PackagePath="" />
+        <None Include="../icon.png" Pack="true" PackagePath="" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Include="../LICENSE" Pack="true" PackagePath="" />
-    <None Include="../README.MD" Pack="true" PackagePath="" />
-  </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+      <PackageReference Include="Vapolia.FluentLayouts" Version="5.0.1" />
+    </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid13.0'">
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2662" />
-  </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-maccatalyst'">
+      <PackageReference Include="Vapolia.FluentLayouts" Version="5.0.1" />
+    </ItemGroup>
+    
+    <!--  nuget configurable properties -->
+    <PropertyGroup>
+        <Version>0.0.0-pre1</Version>
+        <VersionSuffix></VersionSuffix>
+    </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'Xamarin.iOS10'">
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2662" />
-  </ItemGroup>
-
-  <!--  nuget configurable properties -->
-  <PropertyGroup>
-    <Version>0.0.0-pre1</Version>
-    <VersionSuffix></VersionSuffix>
-    <DefineConstants>$(DefineConstants);</DefineConstants>
-  </PropertyGroup>
-
-  <!--  nuget properties -->
-  <PropertyGroup>
-    <PackageId>Vapolia.UserInteraction</PackageId>
-    <!--    <PackageIconUrl>https://github.com/softlion/XamarinFormsGesture/favicon.ico</PackageIconUrl>-->
-    <Summary>Confirm, Alert, Menu, Toast, ... for maui and xamarin</Summary>
-    <PackageTags>user interaction picker popup toast menu maui xamarin ios android forms</PackageTags>
-    <Title>The best user interaction plugin for xamarin with  Bottom Menu, Confirm, Alert, Toast, Wait inditacor, Activity indicator, ...</Title>
-    <Description>
-      Content: Menu, WaitIndicator, Confirm, Confirm3Buttons, Alert, Toast, ActivityIndicator, Input, ...
-    </Description>
-    <PackageLicenseUrl>https://github.com/softlion/UserInteraction</PackageLicenseUrl>
-    <PackageVersion>$(Version)$(VersionSuffix)</PackageVersion>
-    <Product>UserInteraction</Product>
-    <Company>Vapolia</Company>
-    <Authors>Benjamin Mayrargue</Authors>
-    <Owners>https://vapolia.eu</Owners>
-    <NeutralLanguage>en</NeutralLanguage>
-    <Copyright>© 2016-2023 Vapolia</Copyright>
-    <RepositoryUrl>https://github.com/softlion/UserInteraction</RepositoryUrl>
-    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-    <!--    <PackageLicenseFile>LICENSE</PackageLicenseFile>-->
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/softlion/UserInteraction</PackageProjectUrl>
-    <PackageReleaseNotes>
-      4.0.0 unified version with old Xamarin
-      1.0.1 replaced ios WaitIndicator from AlertView to UIAlertAction
-      --- version is now 1.0.0
-      4.0.1: replace android toast by a snackbar, and make its background color customizable.
-      4.0.0: supports MAUI. Moved location fetcher to a standalone nuget.
-      3.0.1: supports android 12.0. No more interface (like xamarin.essentials)
-      2.0.5: update nugets for Android
-      2.0.1: now supports decimal input types
-      2.0.0: now framework independant!
-    </PackageReleaseNotes>
-  </PropertyGroup>
+    <!--  nuget properties -->
+    <PropertyGroup>
+        <PackageId>Vapolia.UserInteraction</PackageId>
+        <Summary>Confirm, Alert, Menu, Toast, ... for maui and xamarin</Summary>
+        <PackageTags>user interaction picker popup toast menu maui xamarin ios android forms</PackageTags>
+        <Title>The best user interaction plugin for xamarin with  Bottom Menu, Confirm, Alert, Toast, Wait inditacor, Activity indicator, ...</Title>
+        <Description>
+          Content: Menu, WaitIndicator, Confirm, Confirm3Buttons, Alert, Toast, ActivityIndicator, Input, ...
+        </Description>
+        <PackageVersion>$(Version)$(VersionSuffix)</PackageVersion>
+        <Product>UserInteraction</Product>
+        <Company>Vapolia</Company>
+        <Authors>Benjamin Mayrargue</Authors>
+        <Owners>https://vapolia.eu</Owners>
+        <NeutralLanguage>en</NeutralLanguage>
+        <Copyright>© 2016-2025 Vapolia</Copyright>
+        <RepositoryUrl>https://github.com/softlion/UserInteraction</RepositoryUrl>
+        <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageProjectUrl>https://github.com/softlion/UserInteraction</PackageProjectUrl>
+        <PackageReleaseNotes>
+          5.0.0 removed xamarin
+          4.0.0 unified version with old Xamarin
+          1.0.1 replaced ios WaitIndicator from AlertView to UIAlertAction
+          --- version is now 1.0.0
+          4.0.1: replace android toast by a snackbar, and make its background color customizable.
+          4.0.0: supports MAUI. Moved location fetcher to a standalone nuget.
+          3.0.1: supports android 12.0. No more interface (like xamarin.essentials)
+          2.0.5: update nugets for Android
+          2.0.1: now supports decimal input types
+          2.0.0: now framework independant!
+        </PackageReleaseNotes>
+    </PropertyGroup>
 
 </Project>
