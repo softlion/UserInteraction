@@ -97,10 +97,10 @@ public interface IUserInteraction
     /// 2-n: other matching button is pressed
     /// </returns>
     /// <remarks>
-    /// If otherButtons is null, the indexes are still incremented, but the button won't appear. 
+    /// If otherButtons is null, the indexes are still incremented, but the button won't appear.
     /// This enables easy scenario where the otherButtons array is changing between calls.
     /// </remarks>
-    Task<int> Menu(CancellationToken dismiss = default, bool userCanDismiss = true, System.Drawing.RectangleF? position = null, string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons);
+    Task<int> Menu(CancellationToken dismiss = default, bool userCanDismiss = true, Microsoft.Maui.Graphics.RectF? position = null, string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons);
 
     /// <summary>
     /// Shortcut
@@ -115,7 +115,7 @@ public interface IUserInteraction
     /// <summary>
     /// Shortcut
     /// </summary>
-    Task<int> Menu(System.Drawing.RectangleF? position = null, string? title = null, string? description = null, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons);
+    Task<int> Menu(Microsoft.Maui.Graphics.RectF? position = null, string? title = null, string? description = null, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons);
 
     /// <summary>
     /// Display a toast

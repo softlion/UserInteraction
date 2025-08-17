@@ -24,7 +24,7 @@ public partial class UserInteraction
     static Task PlatformActivityIndicator(CancellationToken dismiss, double? apparitionDelay, uint? argbColor)
         => throw new NotSupportedException(CantRunOnNonPlatform);
 
-    static Task<int> PlatformMenu(CancellationToken dismiss, bool userCanDismiss, System.Drawing.RectangleF? position, string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
+    static Task<int> PlatformMenu(CancellationToken dismiss, bool userCanDismiss, Microsoft.Maui.Graphics.RectF? position, string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
         => throw new NotSupportedException(CantRunOnNonPlatform);
 
     static Task PlatformToast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null)

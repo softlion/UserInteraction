@@ -352,7 +352,7 @@ public partial class UserInteraction
     /// others: 2+index
     /// </returns>
     internal static Task<int> PlatformMenu(CancellationToken dismiss, bool userCanDismiss,
-        System.Drawing.RectangleF? position = null,
+        Microsoft.Maui.Graphics.RectF? position = null,
         string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
     {
         var tcs = new TaskCompletionSource<int>();
@@ -377,7 +377,9 @@ public partial class UserInteraction
                 {
                     alertController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
                     presenter.SourceView = currentView;
-                    presenter.SourceRect = position ?? new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1);
+                    presenter.SourceRect = position.HasValue
+                        ? new CGRect(position.Value.X, position.Value.Y, position.Value.Width, position.Value.Height)
+                        : new CGRect(0, currentView.Bounds.Bottom - 1, currentView.Bounds.Width, 1);
                 }
             }
 

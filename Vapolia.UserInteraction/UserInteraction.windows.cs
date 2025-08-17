@@ -537,7 +537,7 @@ public partial class UserInteraction
     /// others: 2+index
     /// </returns>
     internal static Task<int> PlatformMenu(CancellationToken dismiss, bool userCanDismiss,
-        System.Drawing.RectangleF? position = null,
+        Microsoft.Maui.Graphics.RectF? position = null,
         string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
     {
         var currentWindow = CurrentWindow;

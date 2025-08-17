@@ -55,7 +55,7 @@ internal class UserInteractionService : IUserInteraction
     /// <summary>
     /// Display a single choice menu
     /// </summary>
-    public Task<int> Menu(CancellationToken dismiss = default, bool userCanDismiss = true, System.Drawing.RectangleF? position = null, string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
+    public Task<int> Menu(CancellationToken dismiss = default, bool userCanDismiss = true, Microsoft.Maui.Graphics.RectF? position = null, string? title = null, string? description = null, int defaultActionIndex = -1, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
         => UserInteraction.Menu(dismiss, userCanDismiss, position, title, description, defaultActionIndex, cancelButton, destroyButton, otherButtons);
 
     /// <summary>
@@ -73,7 +73,7 @@ internal class UserInteractionService : IUserInteraction
     /// <summary>
     /// Shortcut
     /// </summary>
-    public Task<int> Menu(System.Drawing.RectangleF? position = null, string? title = null, string? description = null, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
+    public Task<int> Menu(Microsoft.Maui.Graphics.RectF? position = null, string? title = null, string? description = null, string? cancelButton = null, string? destroyButton = null, params string[] otherButtons)
         => UserInteraction.Menu(position, title, description, cancelButton, destroyButton, otherButtons);
 
     /// <summary>

@@ -78,6 +78,7 @@
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageProjectUrl>https://github.com/softlion/UserInteraction</PackageProjectUrl>
         <PackageReleaseNotes>
+          5.0.1 replace system.drawing.rectangle by maui.graphics.rectf
           5.0.0 removed xamarin
           4.0.0 unified version with old Xamarin
           1.0.1 replaced ios WaitIndicator from AlertView to UIAlertAction
