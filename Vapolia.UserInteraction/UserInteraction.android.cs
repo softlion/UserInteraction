@@ -220,17 +220,14 @@ public partial class UserInteraction
 	}
 
 
-	class WaitIndicatorImpl : IWaitIndicator
+	class WaitIndicatorImpl(CancellationToken userDismissedToken) : IWaitIndicator
 	{
 		private string? title, body;
 		public Activity? Context { get; set; }
 
 		public AlertDialog? Dialog { get; set; }
 
-		public WaitIndicatorImpl(CancellationToken userDismissedToken)
-			=> UserDismissedToken = userDismissedToken;
-
-		public CancellationToken UserDismissedToken { get; }
+		public CancellationToken UserDismissedToken { get; } = userDismissedToken;
 
 		public string? Title 
 		{ 

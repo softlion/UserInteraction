@@ -37,22 +37,31 @@ public partial class UserInteraction
         var tcs = new TaskCompletionSource<bool>();
         UIApplication.SharedApplication.InvokeOnMainThread(() =>
         {
-            var confirm = new UIAlertView(title ?? string.Empty, message, null, cancelButton, okButton);
-            confirm.Clicked += (sender, args) => tcs.TrySetResult(confirm.CancelButtonIndex != args.ButtonIndex);
-            confirm.Show();
+            var presentingVc = CurrentViewController();
+            if (presentingVc == null)
+            {
+                tcs.TrySetResult(false);
+                return;
+            }
 
+            var confirm = UIAlertController.Create(title ?? string.Empty, message, UIAlertControllerStyle.Alert);
+            confirm.AddAction(UIAlertAction.Create(okButton, UIAlertActionStyle.Default, action => tcs.TrySetResult(true)));
+            confirm.AddAction(UIAlertAction.Create(cancelButton, UIAlertActionStyle.Cancel, action => tcs.TrySetResult(false)));
+
+            CancellationTokenRegistration? registration = null;
             if (dismiss != null)
             {
-                var registration = dismiss.Value.Register(() =>
+                registration = dismiss.Value.Register(() =>
                 {
                     UIApplication.SharedApplication.InvokeOnMainThread(() =>
                     {
-                        if (confirm.Visible)
-                            confirm.DismissWithClickedButtonIndex(0, true);
+                        confirm.DismissViewController(true, () => tcs.TrySetResult(false));
                     });
                 });
-                tcs.Task.ContinueWith(t => registration.Dispose());
             }
+
+            presentingVc.PresentViewController(confirm, true, null);
+            tcs.Task.ContinueWith(t => registration?.Dispose());
         });
         return tcs.Task;
     }
@@ -62,19 +71,19 @@ public partial class UserInteraction
         var tcs = new TaskCompletionSource<ConfirmThreeButtonsResponse>();
         UIApplication.SharedApplication.InvokeOnMainThread(() =>
         {
-            var confirm = new UIAlertView(title ?? string.Empty, message, null, negative, positive, neutral);
-            confirm.Clicked +=
-                (sender, args) =>
-                {
-                    var buttonIndex = args.ButtonIndex;
-                    if (buttonIndex == confirm.CancelButtonIndex)
-                        tcs.TrySetResult(ConfirmThreeButtonsResponse.Negative);
-                    else if (buttonIndex == confirm.FirstOtherButtonIndex)
-                        tcs.TrySetResult(ConfirmThreeButtonsResponse.Positive);
-                    else
-                        tcs.TrySetResult(ConfirmThreeButtonsResponse.Neutral);
-                };
-            confirm.Show();
+            var presentingVc = CurrentViewController();
+            if (presentingVc == null)
+            {
+                tcs.TrySetResult(ConfirmThreeButtonsResponse.Negative);
+                return;
+            }
+
+            var confirm = UIAlertController.Create(title ?? string.Empty, message, UIAlertControllerStyle.Alert);
+            confirm.AddAction(UIAlertAction.Create(positive, UIAlertActionStyle.Default, action => tcs.TrySetResult(ConfirmThreeButtonsResponse.Positive)));
+            confirm.AddAction(UIAlertAction.Create(neutral, UIAlertActionStyle.Default, action => tcs.TrySetResult(ConfirmThreeButtonsResponse.Neutral)));
+            confirm.AddAction(UIAlertAction.Create(negative, UIAlertActionStyle.Cancel, action => tcs.TrySetResult(ConfirmThreeButtonsResponse.Negative)));
+
+            presentingVc.PresentViewController(confirm, true, null);
         });
         return tcs.Task;
     }
@@ -84,9 +93,16 @@ public partial class UserInteraction
         var tcs = new TaskCompletionSource<bool>();
         UIApplication.SharedApplication.InvokeOnMainThread(() =>
         {
-            var alert = new UIAlertView(title ?? string.Empty, message, null, okButton);
-            alert.Clicked += (sender, args) => tcs.TrySetResult(true);
-            alert.Show();
+            var presentingVc = CurrentViewController();
+            if (presentingVc == null)
+            {
+                tcs.TrySetResult(true);
+                return;
+            }
+
+            var alert = UIAlertController.Create(title ?? string.Empty, message, UIAlertControllerStyle.Alert);
+            alert.AddAction(UIAlertAction.Create(okButton, UIAlertActionStyle.Default, action => tcs.TrySetResult(true)));
+            presentingVc.PresentViewController(alert, true, null);
         });
         return tcs.Task;
     }
