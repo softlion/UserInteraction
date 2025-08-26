@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
-using Vapolia.UserInteraction;
+using Vapolia.UserInteractions;
 
 namespace MauiDemo;
 

@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Maui.Platform;
 using Window = Microsoft.UI.Xaml.Window;
 
-namespace Vapolia.UserInteraction;
+namespace Vapolia.UserInteractions;
 
 public partial class UserInteraction
 {

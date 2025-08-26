@@ -1,4 +1,4 @@
-namespace Vapolia.UserInteraction;
+namespace Vapolia.UserInteractions;
 
 /// <summary>
 /// Implementation of IUserInteraction that delegates to the static UserInteraction methods.

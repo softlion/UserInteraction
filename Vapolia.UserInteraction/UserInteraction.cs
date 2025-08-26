@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace Vapolia.UserInteraction;
+namespace Vapolia.UserInteractions;
 
 public partial class UserInteraction
 {

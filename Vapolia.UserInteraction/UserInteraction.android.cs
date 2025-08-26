@@ -20,7 +20,7 @@ using Google.Android.Material.TextField;
 using ProgressBar = Android.Widget.ProgressBar;
 using Microsoft.Maui.Platform;
 
-namespace Vapolia.UserInteraction;
+namespace Vapolia.UserInteractions;
 
 
 public static class Constants

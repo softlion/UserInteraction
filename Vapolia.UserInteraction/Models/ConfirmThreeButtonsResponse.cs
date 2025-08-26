@@ -1,4 +1,4 @@
-namespace Vapolia.UserInteraction
+namespace Vapolia.UserInteractions
 {
 	public enum ConfirmThreeButtonsResponse
 	{

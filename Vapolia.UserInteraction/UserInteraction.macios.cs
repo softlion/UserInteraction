@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Platform;
 using Vapolia.FluentLayouts;
 
-namespace Vapolia.UserInteraction;
+namespace Vapolia.UserInteractions;
 
 public partial class UserInteraction
 {

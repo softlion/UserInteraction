@@ -1,4 +1,4 @@
-namespace Vapolia.UserInteraction;
+namespace Vapolia.UserInteractions;
 
 #if !IOS && !MACCATALYST && !ANDROID && !WINDOWS
 public partial class UserInteraction

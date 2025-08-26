@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 
-[assembly: XmlnsDefinition("https://vapolia.eu/userinteraction", "Vapolia.UserInteraction")]
+[assembly: XmlnsDefinition("https://vapolia.eu/userinteraction", "Vapolia.UserInteractions")]
 [assembly: Microsoft.Maui.Controls.XmlnsPrefix("https://vapolia.eu/userinteraction", "ui")]
-[assembly: Microsoft.Maui.Controls.XmlnsPrefix("clr-namespace:Vapolia.UserInteraction;assembly=Vapolia.UserInteraction", "ui")]
+[assembly: Microsoft.Maui.Controls.XmlnsPrefix("clr-namespace:Vapolia.UserInteractions;assembly=Vapolia.UserInteractions", "ui")]
 
-namespace Vapolia.UserInteraction;
+namespace Vapolia.UserInteractions;
 
 public static class UserInteractionMauiAppBuilderExtensions
 {

@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-using Vapolia.UserInteraction;
+using Vapolia.UserInteractions;
 
 namespace MauiDemo;
 

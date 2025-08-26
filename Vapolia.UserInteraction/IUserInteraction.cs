@@ -1,4 +1,4 @@
-namespace Vapolia.UserInteraction;
+namespace Vapolia.UserInteractions;
 
 /// <summary>
 /// Interface for user interaction services providing dialogs, alerts, menus, and toast notifications.
