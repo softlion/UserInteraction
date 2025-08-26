@@ -13,8 +13,8 @@
         <Nullable>enable</Nullable>
         <IsTrimmable>true</IsTrimmable>
 
-        <AssemblyName>Vapolia.UserInteraction</AssemblyName>
-        <RootNamespace>Vapolia.UserInteraction</RootNamespace>
+        <AssemblyName>Vapolia.UserInteractions</AssemblyName>
+        <RootNamespace>Vapolia.UserInteractions</RootNamespace>
         
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>        
