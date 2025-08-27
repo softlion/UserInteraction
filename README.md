@@ -223,7 +223,7 @@ Also make sure your MainTheme.Base has a parent which is material components:
 set a default color for all activity indicators:
 
 ```csharp
-global::Vapolia.UserInteraction.UserInteraction.DefaultColor = 0xAARRGGBB;
+global::Vapolia.UserInteractions.UserInteraction.DefaultColor = 0xAARRGGBB;
 ```
 
 #### Android
@@ -236,4 +236,5 @@ Also check [this stackoverflow answer](https://stackoverflow.com/questions/52829
 License: MIT
 
 Enterprise support available, contact [Vapolia](https://vapolia.eu) through the live chat.
+
 
