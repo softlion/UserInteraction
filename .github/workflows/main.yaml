@@ -11,24 +11,33 @@ jobs:
     runs-on: windows-latest
     environment: Default
     env:
-      NUPKG_MAJOR: 5.1.0
+      NUPKG_MAJOR: 6.0.0
       DOTNET_CLI_TELEMETRY_OPTOUT: true
       DOTNET_NOLOGO: true
       PROJECT: Vapolia.UserInteraction\Vapolia.UserInteraction.csproj
 
+    permissions:
+      id-token: write
+    
     steps:
-      - uses: actions/checkout@v4
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: ${{ secrets.NUGET_LOGIN }}
+          
+      - uses: actions/checkout@v7
         
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
           
 #    fixes error XA0031: Java SDK 11.0 or above is required when using $(TargetFrameworkVersion) v13.0. [D:\a\UserInteraction\UserInteraction\Vapolia.UserInteraction\Vapolia.UserInteraction.csproj::TargetFramework=MonoAndroid13.0]
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'microsoft'
-          java-version: '17'
+#      - uses: actions/setup-java@v2
+#        with:
+#          distribution: 'microsoft'
+#          java-version: '17'
         
       - name: Build
         shell: pwsh
@@ -38,7 +47,7 @@ jobs:
         shell: pwsh
         env:
           #required so if it contains special characters they are not interpreted by powershell
-          NUGET_AUTH_TOKEN: ${{secrets.NUGETAPIKEY}}
+          NUGET_AUTH_TOKEN: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
           NUGET_TARGET: https://api.nuget.org/v3/index.json
         run: |
           $VERSION="$env:NUPKG_MAJOR-ci$env:GITHUB_RUN_ID"
