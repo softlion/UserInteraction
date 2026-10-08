@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using UIKit;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Platform;
-using Vapolia.FluentLayouts;
 
 namespace Vapolia.UserInteractions;
 
@@ -289,26 +288,25 @@ public partial class UserInteraction
                     waitView.Add(indicator);
                     currentView.Add(waitView);
 
-                    waitView.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
-                    waitView.AddConstraints(
-                        overlay.AtTopOf(waitView),
-                        overlay.AtLeftOf(waitView),
-                        overlay.AtBottomOf(waitView),
-                        overlay.AtRightOf(waitView),
-
-                        indicator.WithSameCenterX(waitView),
-                        indicator.WithSameCenterY(waitView),
-                        indicator.Width().EqualTo(60),
-                        indicator.Height().EqualTo(60)
-                    );
-
+                    overlay.TranslatesAutoresizingMaskIntoConstraints = false;
+                    indicator.TranslatesAutoresizingMaskIntoConstraints = false;
                     waitView.TranslatesAutoresizingMaskIntoConstraints = false;
-                    currentView.AddConstraints(
-                        waitView.AtTopOf(currentView),
-                        waitView.AtLeftOf(currentView),
-                        waitView.AtRightOf(currentView),
-                        waitView.AtBottomOf(currentView)
-                    );
+                    NSLayoutConstraint.ActivateConstraints([
+                        overlay.TopAnchor.ConstraintEqualTo(waitView.TopAnchor),
+                        overlay.LeadingAnchor.ConstraintEqualTo(waitView.LeadingAnchor),
+                        overlay.BottomAnchor.ConstraintEqualTo(waitView.BottomAnchor),
+                        overlay.TrailingAnchor.ConstraintEqualTo(waitView.TrailingAnchor),
+
+                        indicator.CenterXAnchor.ConstraintEqualTo(waitView.CenterXAnchor),
+                        indicator.CenterYAnchor.ConstraintEqualTo(waitView.CenterYAnchor),
+                        indicator.WidthAnchor.ConstraintEqualTo(60),
+                        indicator.HeightAnchor.ConstraintEqualTo(60),
+
+                        waitView.TopAnchor.ConstraintEqualTo(currentView.TopAnchor),
+                        waitView.LeadingAnchor.ConstraintEqualTo(currentView.LeadingAnchor),
+                        waitView.TrailingAnchor.ConstraintEqualTo(currentView.TrailingAnchor),
+                        waitView.BottomAnchor.ConstraintEqualTo(currentView.BottomAnchor)
+                    ]);
 
                     UIView.Animate(0.4, () => { waitView.Alpha = 1; });
                     indicator.StartAnimating();
@@ -466,22 +464,22 @@ public partial class UserInteraction
             currentView.BringSubviewToFront(holder);
 
             //constraints
-            holder.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
-            holder.AddConstraints(
-                label.AtLeftOf(holder, 10),
-                label.AtRightOf(holder, 10),
-                label.AtTopOf(holder, 5),
-                label.AtBottomOf(holder, 5)
-            );
-
+            label.TranslatesAutoresizingMaskIntoConstraints = false;
             holder.TranslatesAutoresizingMaskIntoConstraints = false;
-            currentView.AddConstraints(
-                holder.WithSameCenterX(currentView),
-                holder.Width().LessThanOrEqualTo().WidthOf(currentView).Minus(15*2),
-                position == ToastPosition.Top ? holder.AtTopOf(currentView, positionOffset) :
-                position == ToastPosition.Bottom ? holder.AtBottomOf(currentView, positionOffset) :
-                holder.WithSameCenterY(currentView)
-            );
+            var safeArea = currentView.SafeAreaLayoutGuide;
+            NSLayoutConstraint.ActivateConstraints([
+                label.LeadingAnchor.ConstraintEqualTo(holder.LeadingAnchor, 10),
+                label.TrailingAnchor.ConstraintEqualTo(holder.TrailingAnchor, -10),
+                label.TopAnchor.ConstraintEqualTo(holder.TopAnchor, 5),
+                label.BottomAnchor.ConstraintEqualTo(holder.BottomAnchor, -5),
+
+
+                holder.CenterXAnchor.ConstraintEqualTo(safeArea.CenterXAnchor),
+                holder.WidthAnchor.ConstraintLessThanOrEqualTo(safeArea.WidthAnchor, 1, -15*2),
+                position == ToastPosition.Top ? holder.TopAnchor.ConstraintEqualTo(safeArea.TopAnchor, positionOffset) :
+                position == ToastPosition.Bottom ? holder.BottomAnchor.ConstraintEqualTo(safeArea.BottomAnchor, -positionOffset) :
+                holder.CenterYAnchor.ConstraintEqualTo(safeArea.CenterYAnchor)
+            ]);
 
             //interactions
             var inCall = false; //Prevent rebond on tap

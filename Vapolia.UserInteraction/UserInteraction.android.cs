@@ -13,6 +13,7 @@ using Exception = System.Exception;
 using KeyboardType = Android.Content.Res.KeyboardType;
 using String = System.String;
 using AndroidX.Core.OS;
+using AndroidX.Core.View;
 using Activity = Android.App.Activity;
 using AndroidX.AppCompat.App;
 using Google.Android.Material.Snackbar;
@@ -565,7 +566,15 @@ public partial class UserInteraction
 					if (layoutParams != null)
 					{
 						layoutParams.Gravity = position == ToastPosition.Bottom ? GravityFlags.Bottom : (position == ToastPosition.Top ? GravityFlags.Top : GravityFlags.CenterVertical);
-						layoutParams.SetMargins(0, position == ToastPosition.Top ? positionOffset : 0, 0, position == ToastPosition.Bottom ? positionOffset : 0);
+						// Same layout as iOS: offset and 15 side margin in dp. The DecorView spans under the
+						// system bars (edge-to-edge), so their insets are added.
+						var bars = ViewCompat.GetRootWindowInsets(view)?.GetInsets(WindowInsetsCompat.Type.SystemBars());
+						var side = DpToPixel(15);
+						var offset = DpToPixel(positionOffset);
+						layoutParams.SetMargins(side + (bars?.Left ?? 0),
+							position == ToastPosition.Top ? offset + (bars?.Top ?? 0) : 0,
+							side + (bars?.Right ?? 0),
+							position == ToastPosition.Bottom ? offset + (bars?.Bottom ?? 0) : 0);
 						snackBar.View.LayoutParameters = layoutParams;
 					}
 
