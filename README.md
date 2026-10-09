@@ -173,13 +173,12 @@ Task ActivityIndicator(CancellationToken dismiss, double? apparitionDelay = null
 A `Toast` is an unobtrusive temporary tooltip-like text used to confirm that an action was done succesfully or failed.
 An `Input` is an alert popup with one text field. You can choose the keyboard type to limit to numbers for example.  
 Confirm: native dialog with 2 buttons (mostly used for ok/cancel)  
-ConfirmThreeButtons: native dialog with 3 choices. Not Task friendly.
+ConfirmThreeButtons: native dialog with 3 choices.
 
 ```csharp
 Task<bool> Confirm(string message, string title = null, string okButton = "OK", string cancelButton = "Cancel", CancellationToken? dismiss = null);
 
-void ConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> answer, string title = null, string positive = "Yes", string negative = "No",
-    string neutral = "Maybe");
+Task<ConfirmThreeButtonsResponse> ConfirmThreeButtons(string message, string? title = null, string positive = "Yes", string negative = "No", string neutral = "Maybe");
 
 Task Alert(string message, string title = "", string okButton = "OK");
 
@@ -191,6 +190,7 @@ Task<string?> Input(string message, string defaultValue = null, string placehold
 If `selectContent` is `true` (default), the text is automatically selected, so when the user starts typing it is replaced.
 
 On iOS and Android, the toast stays inside the safe area: `positionOffset` (in dp/points) is measured from the safe area edge, not from the screen edge.  
+`style` sets the background color on Android (`Warning` orange, `Error` red) and Windows (`Info` blue, `Warning` orange, `Error` red). iOS ignores it and uses white text on black.  
 `backgroundColor` overrides the color given by `style`. `textColor` overrides the default white text.
 
 ```csharp
@@ -237,11 +237,11 @@ Also make sure your MainTheme.Base has a parent which is material components:
 
 ### Theme
 
-#### iOS
-set a default color for all activity indicators:
+#### iOS and Windows
+Set a default color for all activity indicators:
 
 ```csharp
-global::Vapolia.UserInteractions.UserInteraction.DefaultColor = 0xAARRGGBB;
+global::Vapolia.UserInteractions.UserInteraction.DefaultColor = Colors.Orange;
 ```
 
 #### Android
