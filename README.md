@@ -191,10 +191,11 @@ If `selectContent` is `true` (default), the text is automatically selected, so w
 
 On iOS and Android, the toast stays inside the safe area: `positionOffset` (in dp/points) is measured from the safe area edge, not from the screen edge.  
 `style` sets the background color on Android (`Warning` orange, `Error` red) and Windows (`Info` blue, `Warning` orange, `Error` red). iOS ignores it and uses white text on black.  
-`backgroundColor` overrides the color given by `style`. `textColor` overrides the default white text.
+`backgroundColor` overrides the color given by `style`. Its alpha makes the background translucent while the text stays opaque. `textColor` overrides the default white text.
 
 ```csharp
 await UserInteraction.Toast("Saved", position: ToastPosition.Top, backgroundColor: Colors.DarkGreen, textColor: Colors.White);
+await UserInteraction.Toast("Saved", backgroundColor: Colors.Black.WithAlpha(0.7f));
 ```
 
 ### Setup

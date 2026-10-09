@@ -515,7 +515,7 @@ public partial class UserInteraction
             }
             holder.AddGestureRecognizer(new UITapGestureRecognizer(() => HideHolder(true)));
 
-            UIView.Animate(1f, () => holder.Alpha = .7f, async () =>
+            UIView.Animate(1f, () => holder.Alpha = 1f, async () =>
             {
                 await Task.Delay((int)duration, dismiss ?? CancellationToken.None).ConfigureAwait(false);
                 UIApplication.SharedApplication.InvokeOnMainThread(() => HideHolder(true));

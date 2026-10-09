@@ -102,7 +102,7 @@ Task Toast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration dura
 - `ToastDuration`: `Short` (1 s), `Normal` (2.5 s), `Long` (8 s).
 - `ToastPosition`: `Top`, `Middle`, `Bottom`.
 - `positionOffset` is in dp/points. On iOS and Android it is measured from the safe area edge.
-- `backgroundColor` overrides the style color. `textColor` overrides the default white text. Both are `Microsoft.Maui.Graphics.Color`.
+- `backgroundColor` overrides the style color. Its alpha makes the background translucent while the text stays opaque (`Colors.Black.WithAlpha(0.7f)`). The toast is opaque by default. `textColor` overrides the default white text. Both are `Microsoft.Maui.Graphics.Color`.
 - Cancelling `dismiss` hides the toast early. On iOS and Windows, a tap also dismisses it.
 
 ```csharp
