@@ -126,6 +126,8 @@ public interface IUserInteraction
     /// <param name="position"></param>
     /// <param name="positionOffset"></param>
     /// <param name="dismiss">optional. Can be used to close the toast programatically.</param>
+    /// <param name="backgroundColor">optional. Overrides the background color given by <paramref name="style"/>.</param>
+    /// <param name="textColor">optional. Overrides the text color.</param>
     /// <returns>A task which completes when the toast has disappeared</returns>
-    Task Toast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null);
+    Task Toast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null, Color? backgroundColor = null, Color? textColor = null);
 }

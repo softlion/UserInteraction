@@ -1,0 +1,9 @@
+{
+  "name": "vapolia-userinteraction",
+  "description": "Adds a skill with the setup and API of the Vapolia.UserInteraction NuGet package: confirm, alert, input, menu, toast, wait and activity indicators for .NET MAUI.",
+  "version": "6.0.1",
+  "author": {
+    "name": "Vapolia"
+  },
+  "homepage": "https://github.com/softlion/UserInteraction"
+}

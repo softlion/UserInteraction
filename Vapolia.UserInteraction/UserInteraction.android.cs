@@ -537,7 +537,7 @@ public partial class UserInteraction
 		return tcs.Task;	   
 	}
 
-	internal static Task PlatformToast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null)
+	internal static Task PlatformToast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null, Color? backgroundColor = null, Color? textColor = null)
 	{
 		var tcs = new TaskCompletionSource<int>();
 
@@ -551,7 +551,7 @@ public partial class UserInteraction
 				//var toast = Android.Widget.Toast.MakeText(activity, text, duration == ToastDuration.Short ? ToastLength.Short : ToastLength.Long);
 				if(snackBar != null)
 				{
-					var color = Constants.ToastStyleBackgroundTint[(int)style];
+					var color = backgroundColor ?? Constants.ToastStyleBackgroundTint[(int)style];
                     if (color != null)
                     {
 						#if MONOANDROID
@@ -561,6 +561,9 @@ public partial class UserInteraction
 						#endif
                         snackBar.SetBackgroundTint(platformColor);
                     }
+
+                    if (textColor != null)
+                        snackBar.SetTextColor(textColor.ToPlatform());
 
                     var layoutParams = snackBar.View.LayoutParameters as FrameLayout.LayoutParams;
 					if (layoutParams != null)

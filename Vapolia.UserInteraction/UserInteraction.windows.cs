@@ -650,7 +650,7 @@ public partial class UserInteraction
         return tcs.Task;
     }
 
-    internal static Task PlatformToast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null)
+    internal static Task PlatformToast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null, Color? backgroundColor = null, Color? textColor = null)
     {
         var currentWindow = CurrentWindow;
         if (currentWindow == null)
@@ -698,11 +698,14 @@ public partial class UserInteraction
                     break;
             }
 
+            if (backgroundColor != null)
+                toastContainer.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(backgroundColor.ToWindowsColor());
+
             // Create text block
             var textBlock = new Microsoft.UI.Xaml.Controls.TextBlock
             {
                 Text = text,
-                Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.White),
+                Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(textColor?.ToWindowsColor() ?? Microsoft.UI.Colors.White),
                 TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
                 HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
                 VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center

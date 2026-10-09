@@ -71,7 +71,7 @@
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageProjectUrl>https://github.com/softlion/UserInteraction</PackageProjectUrl>
         <PackageReleaseNotes>
-          6.0.1 toast: safe area aware on iOS and Android. Remove dependency on FluentLayout.
+          6.0.1 toast: safe area aware on iOS and Android. Remove dependency on FluentLayout. Customize Toast style.
           6.0.0 net10 only  
           5.1.0 breaking change: namespace is now Vapolia.UserInteractions to prevent conflicts between the namespace and the UserInteraction class  
           5.0.1 replace system.drawing.rectangle by maui.graphics.rectf

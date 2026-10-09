@@ -434,7 +434,7 @@ public partial class UserInteraction
         return tcs.Task;
     }
 
-    internal static Task PlatformToast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null)
+    internal static Task PlatformToast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null, Color? backgroundColor = null, Color? textColor = null)
     {
         var presentingVc = CurrentViewController();
         if (presentingVc == null)
@@ -453,10 +453,10 @@ public partial class UserInteraction
 
             //UI items
             var font = UIFont.SystemFontOfSize(UIFont.SmallSystemFontSize);
-            var holder = new UIView {Alpha = 0, BackgroundColor = UIColor.Black };
+            var holder = new UIView {Alpha = 0, BackgroundColor = backgroundColor?.ToPlatform() ?? UIColor.Black };
             holder.Layer.CornerRadius = font.LineHeight/2;
             holder.Layer.MasksToBounds = true;
-            var label = new UILabelEx {Text = text, Font = font, TextColor = UIColor.White, TextAlignment = UITextAlignment.Center, LineBreakMode = UILineBreakMode.WordWrap, Lines = 0};
+            var label = new UILabelEx {Text = text, Font = font, TextColor = textColor?.ToPlatform() ?? UIColor.White, TextAlignment = UITextAlignment.Center, LineBreakMode = UILineBreakMode.WordWrap, Lines = 0};
 
             //orders
             holder.Add(label);

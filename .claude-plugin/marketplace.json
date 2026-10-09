@@ -1,0 +1,15 @@
+{
+  "name": "vapolia-userinteraction",
+  "owner": {
+    "name": "Vapolia",
+    "email": "benjamin@vapolia.fr"
+  },
+  "description": "Vapolia Claude Code plugins for .NET MAUI",
+  "plugins": [
+    {
+      "name": "vapolia-userinteraction",
+      "source": "./",
+      "description": "Dialogs, menus, toasts and wait indicators for .NET MAUI (Vapolia.UserInteraction NuGet package)"
+    }
+  ]
+}

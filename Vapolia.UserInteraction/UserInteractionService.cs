@@ -79,6 +79,6 @@ internal class UserInteractionService : IUserInteraction
     /// <summary>
     /// Display a toast
     /// </summary>
-    public Task Toast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null)
-        => UserInteraction.Toast(text, style, duration, position, positionOffset, dismiss);
+    public Task Toast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null, Color? backgroundColor = null, Color? textColor = null)
+        => UserInteraction.Toast(text, style, duration, position, positionOffset, dismiss, backgroundColor, textColor);
 }

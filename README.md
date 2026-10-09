@@ -13,6 +13,17 @@ Combined with MauiGestures helpers, you can easily set the menu position on tabl
 <img width="566" height="333" alt="image" src="https://github.com/user-attachments/assets/3360f7ce-b9fe-4b5b-814d-34902c9e6112" />
 
 
+## AI Assistant Plugin (Claude Code)
+
+The plugin adds a skill that gives your AI assistant the setup steps and the full API of this library.
+
+```shell
+/plugin marketplace add softlion/UserInteraction
+/plugin install vapolia-userinteraction@vapolia-userinteraction
+```
+
+Compatible with Claude Code, Cursor, GitHub Copilot, Gemini CLI, and any tool supporting the [Agent Skills open standard](https://agentskills.io). The skill file is [skills/user-interaction/SKILL.md](skills/user-interaction/SKILL.md).
+
 ## Usage
 
 This library provides two ways to use user interaction dialogs.  
@@ -172,12 +183,19 @@ void ConfirmThreeButtons(string message, Action<ConfirmThreeButtonsResponse> ans
 
 Task Alert(string message, string title = "", string okButton = "OK");
 
-Task Toast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null);
+Task Toast(string text, ToastStyle style = ToastStyle.Notice, ToastDuration duration = ToastDuration.Normal, ToastPosition position = ToastPosition.Bottom, int positionOffset = 20, CancellationToken? dismiss = null, Color? backgroundColor = null, Color? textColor = null);
 
 Task<string?> Input(string message, string defaultValue = null, string placeholder = null, string title = null, string okButton = "OK", string cancelButton = "Cancel", FieldType fieldType = FieldType.Default, int maxLength = 0, bool selectContent = true);
 ```
 
 If `selectContent` is `true` (default), the text is automatically selected, so when the user starts typing it is replaced.
+
+On iOS and Android, the toast stays inside the safe area: `positionOffset` (in dp/points) is measured from the safe area edge, not from the screen edge.  
+`backgroundColor` overrides the color given by `style`. `textColor` overrides the default white text.
+
+```csharp
+await UserInteraction.Toast("Saved", position: ToastPosition.Top, backgroundColor: Colors.DarkGreen, textColor: Colors.White);
+```
 
 ### Setup
 
